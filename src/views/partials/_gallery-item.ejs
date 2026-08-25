@@ -1,0 +1,17 @@
+<div class="gallery-item">
+	<% if (item.mediaType === 'video') { %>
+		<a href="<%= item.mediaUrl %>" target="_blank" rel="noopener" class="gallery-item__media gallery-item__media--video">
+			<span class="gallery-item__play"><i class="iconify fs-24" data-icon="mdi:play"></i></span>
+		</a>
+	<% } else { %>
+		<a href="<%= item.mediaUrl %>" target="_blank" rel="noopener" class="gallery-item__media">
+			<img src="<%= item.mediaUrl %>" alt="<%= item.title %>">
+		</a>
+	<% } %>
+	<div class="gallery-item__caption">
+		<p class="fs-14 fw-semibold mb-0 line-clamp-1"><%= item.title %></p>
+		<% if (item.category) { %>
+			<p class="fs-12 mb-0" style="opacity: 0.65;"><%= item.category %></p>
+		<% } %>
+	</div>
+</div>

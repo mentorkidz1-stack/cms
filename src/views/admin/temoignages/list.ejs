@@ -1,0 +1,45 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= testimonials.length %> témoignage(s)</p>
+	<a href="/admin/temoignages/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Ajouter un témoignage</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>Photo</th>
+			<th>Auteur</th>
+			<th>Rôle / Entreprise</th>
+			<th>Note</th>
+			<th>Ordre</th>
+			<th>Statut</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (testimonials.length === 0) { %>
+			<tr><td colspan="7" class="hint">Aucun témoignage pour le moment.</td></tr>
+		<% } %>
+		<% testimonials.forEach(t => { %>
+			<tr>
+				<td><img class="thumb" src="<%= t.photoUrl || '/images/avatar/user.png' %>" alt=""></td>
+				<td><%= t.authorName %></td>
+				<td><%= t.authorRole || '—' %></td>
+				<td><%= t.rating ? t.rating + '/5' : '—' %></td>
+				<td><%= t.order %></td>
+				<td><span class="<%= t.published ? 'badge-published' : 'badge-draft' %>"><%= t.published ? 'Publié' : 'Brouillon' %></span></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/admin/temoignages/<%= t.id %>/edit" class="admin-btn admin-btn--ghost admin-btn--sm">Modifier</a>
+						<form action="/admin/temoignages/<%= t.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer ce témoignage ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>

@@ -1,0 +1,20 @@
+<%- include('../partials/header', { title }) %>
+<%- include('../partials/page-hero', { title: `{{${settings.formationsLabel}}}`, subheading: settings.formationsSubheading }) %>
+
+<section class="pt-60px pb-80px">
+	<div class="container">
+		<% if (formations.length === 0) { %>
+			<p class="text-center">Aucune formation publiée pour le moment. Revenez bientôt !</p>
+		<% } else { %>
+			<div class="row">
+				<% formations.forEach(formation => { %>
+					<div class="col-md-6 col-lg-4 mb-30px">
+						<%- include('../partials/_formation-card', { formation }) %>
+					</div>
+				<% }) %>
+			</div>
+		<% } %>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,53 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= items.length %> élément(s)</p>
+	<a href="/admin/galerie/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Ajouter à la galerie</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>Aperçu</th>
+			<th>Titre</th>
+			<th>Type</th>
+			<th>Catégorie</th>
+			<th>Ordre</th>
+			<th>Statut</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (items.length === 0) { %>
+			<tr><td colspan="7" class="hint">Aucun élément pour le moment.</td></tr>
+		<% } %>
+		<% items.forEach(item => { %>
+			<tr>
+				<td>
+					<% if (item.mediaType === 'video') { %>
+						<div class="thumb d-flex align-items-center justify-content-center" style="background:#212427;">
+							<i class="iconify fs-20" style="color:#fff;" data-icon="mdi:play"></i>
+						</div>
+					<% } else { %>
+						<img class="thumb" src="<%= item.mediaUrl %>" alt="">
+					<% } %>
+				</td>
+				<td><%= item.title %></td>
+				<td><%= item.mediaType === 'video' ? 'Vidéo' : 'Photo' %></td>
+				<td><%= item.category || '—' %></td>
+				<td><%= item.order %></td>
+				<td><span class="<%= item.published ? 'badge-published' : 'badge-draft' %>"><%= item.published ? 'Publié' : 'Brouillon' %></span></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/admin/galerie/<%= item.id %>/edit" class="admin-btn admin-btn--ghost admin-btn--sm">Modifier</a>
+						<form action="/admin/galerie/<%= item.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer cet élément ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>

@@ -1,0 +1,27 @@
+<%- include('../partials/header', { title }) %>
+<%- include('../partials/page-hero', { title: '{{Galerie}}', subheading: 'Photos et vidéos de nos événements, ateliers et formations passées.' }) %>
+
+<section class="pt-60px pb-80px">
+	<div class="container">
+		<% if (categories.length > 0) { %>
+			<div class="d-flex flex-wrap gap-10px justify-content-center mb-40px">
+				<a href="/galerie" class="fs-14 fw-semibold transition-all pt-8px pb-8px pe-15px ps-15px border-radius-20px <%= !activeCategory ? 'button button-type-01 text-white' : '' %>" style="<%= !activeCategory ? '' : 'border: 1px solid #ddd;' %>">Tout</a>
+				<% categories.forEach(cat => { %>
+					<a href="/galerie?categorie=<%= encodeURIComponent(cat) %>" class="fs-14 fw-semibold transition-all pt-8px pb-8px pe-15px ps-15px border-radius-20px <%= activeCategory === cat ? 'button button-type-01 text-white' : '' %>" style="<%= activeCategory === cat ? '' : 'border: 1px solid #ddd;' %>"><%= cat %></a>
+				<% }) %>
+			</div>
+		<% } %>
+
+		<% if (items.length === 0) { %>
+			<p class="text-center">Aucun contenu publié pour le moment.</p>
+		<% } else { %>
+			<div class="gallery-grid">
+				<% items.forEach(item => { %>
+					<%- include('../partials/_gallery-item', { item }) %>
+				<% }) %>
+			</div>
+		<% } %>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,28 @@
+<article class="courses-layout-2__items">
+	<div class="courses-layout-2__items__top position-relative">
+		<figure>
+			<a href="/services/<%= service.slug %>">
+				<img src="<%= service.imageUrl || '/images/courses/courses-large-01.png' %>" alt="<%= service.title %>">
+			</a>
+			<figcaption class="courses-layout-2__items__cate text-capitalize">
+				<span class="text-white"><%= settings.servicesLabelSingular %></span>
+			</figcaption>
+		</figure>
+	</div>
+	<div class="courses-layout-2__items__bottom pt-20px pb-20px pe-15px ps-15px">
+		<h4 class="courses-layout-2__items__title fs-20 fw-semibold text-capitalize mb-12px">
+			<a href="/services/<%= service.slug %>" class="transition-all line-clamp-2"><%= service.title %></a>
+		</h4>
+		<p class="courses-layout-2__items__brief fs-14 line-clamp-2 mb-12px"><%= stripHtml(service.description, 140) %></p>
+		<div class="courses-layout-2__items__value d-flex align-items-center gap-10px mb-10px">
+			<% if (service.price) { %>
+				<p class="courses-layout-2__items__price fs-18 fw-semibold mb-0"><%= service.price.toLocaleString('fr-FR') %> FCFA</p>
+			<% } else { %>
+				<p class="courses-layout-2__items__price fs-18 fw-semibold mb-0">Sur devis</p>
+			<% } %>
+		</div>
+		<a href="/services/<%= service.slug %>" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all d-flex align-items-center justify-content-center gap-5px">
+			<span>En savoir plus</span>
+		</a>
+	</div>
+</article>

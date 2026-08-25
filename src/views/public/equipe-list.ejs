@@ -1,0 +1,20 @@
+<%- include('../partials/header', { title }) %>
+<%- include('../partials/page-hero', { title: `{{${settings.equipeLabel}}}`, subheading: settings.equipeSubheading }) %>
+
+<section class="pt-60px pb-80px">
+	<div class="container">
+		<% if (team.length === 0) { %>
+			<p class="text-center">L'équipe sera bientôt présentée ici.</p>
+		<% } else { %>
+			<div class="row">
+				<% team.forEach(member => { %>
+					<div class="col-6 col-md-4 col-lg-3">
+						<%- include('../partials/_team-card', { member }) %>
+					</div>
+				<% }) %>
+			</div>
+		<% } %>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

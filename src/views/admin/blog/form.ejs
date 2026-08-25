@@ -1,0 +1,72 @@
+<%- include('../_header', { title }) %>
+
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+<div class="admin-card">
+	<form class="admin-form" action="<%= post ? `/admin/blog/${post.id}?_method=PUT` : '/admin/blog' %>" method="POST" enctype="multipart/form-data">
+		<div class="field">
+			<label for="title">Titre</label>
+			<input type="text" id="title" name="title" required value="<%= post ? post.title : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="excerpt">Résumé (affiché dans les listes)</label>
+			<textarea id="excerpt" name="excerpt" rows="2" required><%= post ? post.excerpt : '' %></textarea>
+		</div>
+
+		<div class="field">
+			<label for="categoryId">Catégorie</label>
+			<select id="categoryId" name="categoryId">
+				<option value="">Aucune</option>
+				<% categories.forEach(cat => { %>
+					<option value="<%= cat.id %>" <%= post && post.categoryId === cat.id ? 'selected' : '' %>><%= cat.name %></option>
+				<% }) %>
+				<option value="new">+ Nouvelle catégorie…</option>
+			</select>
+			<input type="text" id="newCategoryName" name="newCategoryName" placeholder="Nom de la nouvelle catégorie" style="display: none; margin-top: 10px;">
+		</div>
+
+		<div class="field">
+			<label>Contenu de l'article</label>
+			<div id="content-editor" class="quill-editor"><%- post ? post.contentHtml : '' %></div>
+			<input type="hidden" name="contentHtml" id="content-input">
+		</div>
+
+		<div class="field">
+			<label for="cover">Image à la une</label>
+			<% if (post && post.coverImageUrl) { %>
+				<img class="current-image" src="<%= post.coverImageUrl %>" alt="">
+			<% } %>
+			<input type="file" id="cover" name="cover" accept="image/*">
+			<p class="hint">JPG, PNG ou WEBP, 5 Mo max. Laissez vide pour conserver l'image actuelle.</p>
+		</div>
+
+		<div class="field checkbox-field">
+			<input type="checkbox" id="published" name="published" <%= (!post || post.published) ? 'checked' : '' %>>
+			<label for="published" style="margin-bottom: 0;">Publié (visible sur le site)</label>
+		</div>
+
+		<div class="d-flex gap-10px">
+			<button type="submit" class="admin-btn"><%= post ? 'Enregistrer' : 'Publier l\'article' %></button>
+			<a href="/admin/blog" class="admin-btn admin-btn--ghost">Annuler</a>
+		</div>
+	</form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+	var contentQuill = new Quill('#content-editor', { theme: 'snow' });
+	var blogForm = document.querySelector('.admin-form');
+	var contentInput = document.getElementById('content-input');
+	blogForm.addEventListener('submit', function () {
+		contentInput.value = contentQuill.root.innerHTML;
+	});
+
+	var categorySelect = document.getElementById('categoryId');
+	var newCategoryInput = document.getElementById('newCategoryName');
+	categorySelect.addEventListener('change', function () {
+		newCategoryInput.style.display = this.value === 'new' ? 'block' : 'none';
+	});
+</script>
+
+<%- include('../_footer') %>

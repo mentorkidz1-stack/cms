@@ -1,0 +1,20 @@
+<%- include('../partials/header', { title }) %>
+<%- include('../partials/page-hero', { title: '{{Témoignages}}', subheading: 'Ce que nos clients et participants disent de nous.' }) %>
+
+<section class="pt-60px pb-80px">
+	<div class="container">
+		<% if (testimonials.length === 0) { %>
+			<p class="text-center">Aucun témoignage publié pour le moment.</p>
+		<% } else { %>
+			<div class="row">
+				<% testimonials.forEach(testimonial => { %>
+					<div class="col-md-6 col-lg-4 mb-30px">
+						<%- include('../partials/_testimonial-card', { testimonial }) %>
+					</div>
+				<% }) %>
+			</div>
+		<% } %>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %> — Admin <%= settings.siteName %></title>
+	<link rel="shortcut icon" href="/images/favicon.png">
+	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="admin-body">
+	<div class="admin-shell">
+		<aside class="admin-sidebar">
+			<a href="/admin" class="admin-sidebar__logo"><%= settings.siteName %></a>
+			<nav class="admin-sidebar__nav">
+				<a href="/admin" class="<%= currentPath === '/admin' ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:view-dashboard-outline"></i> Tableau de bord
+				</a>
+				<a href="/admin/formations" class="<%= currentPath.startsWith('/admin/formations') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:school-outline"></i> <%= settings.formationsLabel %>
+				</a>
+				<a href="/admin/services" class="<%= currentPath.startsWith('/admin/services') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:briefcase-outline"></i> <%= settings.servicesLabel %>
+				</a>
+				<a href="/admin/blog" class="<%= currentPath.startsWith('/admin/blog') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:post-outline"></i> <%= settings.blogLabel %>
+				</a>
+				<a href="/admin/equipe" class="<%= currentPath.startsWith('/admin/equipe') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:account-group-outline"></i> <%= settings.equipeLabel %>
+				</a>
+				<a href="/admin/galerie" class="<%= currentPath.startsWith('/admin/galerie') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:image-multiple-outline"></i> Galerie
+				</a>
+				<a href="/admin/temoignages" class="<%= currentPath.startsWith('/admin/temoignages') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:comment-quote-outline"></i> Témoignages
+				</a>
+				<a href="/admin/partenaires" class="<%= currentPath.startsWith('/admin/partenaires') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:handshake-outline"></i> Partenaires
+				</a>
+				<a href="/admin/settings" class="<%= currentPath.startsWith('/admin/settings') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:cog-outline"></i> Paramètres
+				</a>
+			</nav>
+			<div class="admin-sidebar__footer">
+				<a href="/" target="_blank">Voir le site &rarr;</a>
+				<form action="/admin/logout" method="POST">
+					<button type="submit">Déconnexion</button>
+				</form>
+			</div>
+		</aside>
+		<main class="admin-main">
+			<header class="admin-topbar">
+				<h1><%= title %></h1>
+			</header>
+			<div class="admin-content">
+				<% if (typeof successMessages !== 'undefined' && successMessages.length) { %>
+					<% successMessages.forEach(msg => { %>
+						<div class="admin-alert admin-alert--success"><%= msg %></div>
+					<% }) %>
+				<% } %>
+				<% if (typeof errorMessages !== 'undefined' && errorMessages.length) { %>
+					<% errorMessages.forEach(msg => { %>
+						<div class="admin-alert admin-alert--error"><%= msg %></div>
+					<% }) %>
+				<% } %>

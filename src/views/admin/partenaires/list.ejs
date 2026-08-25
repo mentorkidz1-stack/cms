@@ -1,0 +1,43 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= partners.length %> partenaire(s)</p>
+	<a href="/admin/partenaires/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Ajouter un partenaire</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>Logo</th>
+			<th>Nom</th>
+			<th>Site web</th>
+			<th>Ordre</th>
+			<th>Statut</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (partners.length === 0) { %>
+			<tr><td colspan="6" class="hint">Aucun partenaire pour le moment.</td></tr>
+		<% } %>
+		<% partners.forEach(p => { %>
+			<tr>
+				<td><img class="thumb" style="object-fit: contain; background: #f5f7fb;" src="<%= p.logoUrl %>" alt=""></td>
+				<td><%= p.name %></td>
+				<td><%= p.websiteUrl || '—' %></td>
+				<td><%= p.order %></td>
+				<td><span class="<%= p.published ? 'badge-published' : 'badge-draft' %>"><%= p.published ? 'Publié' : 'Brouillon' %></span></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/admin/partenaires/<%= p.id %>/edit" class="admin-btn admin-btn--ghost admin-btn--sm">Modifier</a>
+						<form action="/admin/partenaires/<%= p.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer ce partenaire ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>

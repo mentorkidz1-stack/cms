@@ -1,0 +1,27 @@
+<%- include('../partials/header', { title }) %>
+
+<section class="pt-50px pb-80px">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-4 text-center mb-30px mb-md-0">
+				<img src="<%= member.photoUrl || '/images/avatar/user.png' %>" alt="<%= member.name %>" class="border-radius-10px mb-20px" style="width: 100%; max-height: 340px; object-fit: cover;">
+				<h1 class="fs-24 fw-bolder mb-5px"><%= member.name %></h1>
+				<p class="fs-15 mb-15px" style="opacity: 0.7;"><%= member.role %></p>
+				<div class="d-flex justify-content-center gap-15px">
+					<% if (member.linkedin) { %>
+						<a href="<%= member.linkedin %>" target="_blank" rel="noopener" class="transition-all"><i class="iconify fs-24" data-icon="bi:linkedin"></i></a>
+					<% } %>
+					<% if (member.email) { %>
+						<a href="mailto:<%= member.email %>" class="transition-all"><i class="iconify fs-24" data-icon="mdi:email-outline"></i></a>
+					<% } %>
+				</div>
+			</div>
+			<div class="col-md-7 offset-md-1">
+				<h3 class="fs-22 fw-semibold mb-15px">À propos</h3>
+				<p class="fs-16" style="white-space: pre-line;"><%= member.bio || '' %></p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,17 @@
+<article class="border-radius-10px overflow-hidden mb-30px" style="border: 1px solid #eee;">
+	<a href="/blog/<%= post.slug %>">
+		<img src="<%= post.coverImageUrl || '/images/courses/courses-large-01.png' %>" alt="<%= post.title %>" style="width: 100%; height: 220px; object-fit: cover;">
+	</a>
+	<div class="pt-20px pb-20px pe-20px ps-20px">
+		<% if (post.category) { %>
+			<span class="hl-style fs-12 fw-semibold text-uppercase d-inline-block mb-10px"><%= post.category.name %></span>
+		<% } %>
+		<h4 class="fs-20 fw-semibold mb-10px">
+			<a href="/blog/<%= post.slug %>" class="transition-all line-clamp-2"><%= post.title %></a>
+		</h4>
+		<p class="fs-14 line-clamp-2 mb-12px"><%= post.excerpt %></p>
+		<span class="fs-13 text-uppercase" style="opacity: 0.65;">
+			<%= new Date(post.publishedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+		</span>
+	</div>
+</article>

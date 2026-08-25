@@ -1,0 +1,25 @@
+<%- include('../partials/header', { title }) %>
+<%- include('../partials/page-hero', { title: settings.contactHeading, subheading: settings.contactSubheading }) %>
+
+<section class="pt-60px pb-80px">
+	<div class="container">
+		<div class="row justify-content-center text-center">
+			<div class="col-lg-6">
+				<% if (settings.whatsappNumber) { %>
+					<a href="https://wa.me/<%= settings.whatsappNumber.replace(/[^0-9]/g, '') %>" target="_blank" rel="noopener" class="button button-type-01 fs-16 fw-semibold text-white text-capitalize transition-all d-flex align-items-center justify-content-center gap-10px mb-25px">
+						<i class="iconify fs-22" data-icon="ic:baseline-whatsapp"></i>
+						<span>Discuter sur WhatsApp</span>
+					</a>
+				<% } %>
+				<% if (settings.contactEmail) { %>
+					<p class="fs-16 mb-10px">
+						<i class="iconify fs-18 me-5px" data-icon="mdi:email-outline"></i>
+						<a href="mailto:<%= settings.contactEmail %>" class="transition-all"><%= settings.contactEmail %></a>
+					</p>
+				<% } %>
+			</div>
+		</div>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,118 @@
+<%- include('../partials/header', { title }) %>
+
+<section class="mkp-banner pt-40px pb-80px">
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-md-7 mb-30px mb-md-0">
+				<div class="mkp-banner__left text-center text-md-start pe-80px">
+					<h1 class="fw-bolder mb-15px"><%- renderHighlighted(settings.heroTitle) %></h1>
+					<p class="mb-25px"><%= settings.heroSubtitle %></p>
+					<div class="mkp-banner__btn d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-30px">
+						<% if (settings.showFormations) { %>
+							<a href="/formations" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all">Découvrir nos <%= settings.formationsLabel.toLowerCase() %></a>
+						<% } %>
+						<% if (settings.showServices) { %>
+							<a href="/services" class="button button-type-01 fs-14 fw-semibold text-capitalize transition-all">Nos <%= settings.servicesLabel.toLowerCase() %></a>
+						<% } %>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div class="mkp-banner__right ps-35px">
+					<img src="<%= settings.bannerImageUrl || '/images/marketplace/banner.png' %>" alt="<%= settings.siteName %>">
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<% if (settings.showPartenaires && partners.length > 0) { %>
+<section class="pt-20px pb-40px">
+	<div class="container">
+		<p class="text-center fs-13 fw-semibold text-uppercase mb-25px" style="opacity: 0.6;">Ils nous font confiance</p>
+		<div class="partner-strip">
+			<% partners.forEach(partner => { %>
+				<%- include('../partials/_partner-logo', { partner }) %>
+			<% }) %>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<% if (settings.showFormations) { %>
+<section class="pt-40px pb-80px">
+	<div class="container">
+		<div class="d-flex align-items-center justify-content-between mb-30px">
+			<h2 class="fs-30 fw-semibold mb-0"><%= settings.formationsLabel %> <span class="hl-style">populaires</span></h2>
+			<a href="/formations" class="fs-14 fw-semibold transition-all">Voir nos <%= settings.formationsLabel.toLowerCase() %> &rarr;</a>
+		</div>
+		<% if (formations.length === 0) { %>
+			<p>Aucun contenu publié pour le moment dans « <%= settings.formationsLabel %> ».</p>
+		<% } else { %>
+			<div class="row">
+				<% formations.forEach(formation => { %>
+					<div class="col-md-6 col-lg-4 mb-30px">
+						<%- include('../partials/_formation-card', { formation }) %>
+					</div>
+				<% }) %>
+			</div>
+		<% } %>
+	</div>
+</section>
+<% } %>
+
+<% if (team.length > 0) { %>
+<section class="pt-40px pb-80px" style="background-color: #f5f7fb;">
+	<div class="container">
+		<div class="d-flex align-items-center justify-content-between mb-30px">
+			<h2 class="fs-30 fw-semibold mb-0">Notre <span class="hl-style"><%= settings.equipeLabel.toLowerCase() %></span></h2>
+			<a href="/equipe" class="fs-14 fw-semibold transition-all">Voir notre <%= settings.equipeLabel.toLowerCase() %> &rarr;</a>
+		</div>
+		<div class="row">
+			<% team.forEach(member => { %>
+				<div class="col-6 col-md-3 mb-30px">
+					<%- include('../partials/_team-card', { member }) %>
+				</div>
+			<% }) %>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<% if (settings.showTemoignages && testimonials.length > 0) { %>
+<section class="pt-40px pb-80px">
+	<div class="container">
+		<div class="d-flex align-items-center justify-content-between mb-30px">
+			<h2 class="fs-30 fw-semibold mb-0">Ils parlent de <span class="hl-style">nous</span></h2>
+			<a href="/temoignages" class="fs-14 fw-semibold transition-all">Voir tous les témoignages &rarr;</a>
+		</div>
+		<div class="row">
+			<% testimonials.slice(0, 3).forEach(testimonial => { %>
+				<div class="col-md-6 col-lg-4 mb-30px">
+					<%- include('../partials/_testimonial-card', { testimonial }) %>
+				</div>
+			<% }) %>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<% if (posts.length > 0) { %>
+<section class="pt-40px pb-80px">
+	<div class="container">
+		<div class="d-flex align-items-center justify-content-between mb-30px">
+			<h2 class="fs-30 fw-semibold mb-0">Derniers articles — <span class="hl-style"><%= settings.blogLabel %></span></h2>
+			<a href="/blog" class="fs-14 fw-semibold transition-all">Voir notre <%= settings.blogLabel.toLowerCase() %> &rarr;</a>
+		</div>
+		<div class="row">
+			<% posts.forEach(post => { %>
+				<div class="col-md-4 mb-30px">
+					<%- include('../partials/_post-card', { post }) %>
+				</div>
+			<% }) %>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<%- include('../partials/footer') %>

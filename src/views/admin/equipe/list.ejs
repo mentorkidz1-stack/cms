@@ -1,0 +1,44 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= team.length %> membre(s)</p>
+	<a href="/admin/equipe/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Ajouter un membre</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>Photo</th>
+			<th>Nom</th>
+			<th>Rôle</th>
+			<th>Ordre</th>
+			<th>Statut</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (team.length === 0) { %>
+			<tr><td colspan="6" class="hint">Aucun membre pour le moment.</td></tr>
+		<% } %>
+		<% team.forEach(m => { %>
+			<tr>
+				<td><img class="thumb" src="<%= m.photoUrl || '/images/avatar/user.png' %>" alt=""></td>
+				<td><%= m.name %></td>
+				<td><%= m.role %></td>
+				<td><%= m.order %></td>
+				<td><span class="<%= m.published ? 'badge-published' : 'badge-draft' %>"><%= m.published ? 'Publié' : 'Brouillon' %></span></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/equipe/<%= m.slug %>" target="_blank" class="admin-btn admin-btn--ghost admin-btn--sm">Voir</a>
+						<a href="/admin/equipe/<%= m.id %>/edit" class="admin-btn admin-btn--ghost admin-btn--sm">Modifier</a>
+						<form action="/admin/equipe/<%= m.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer ce membre ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>

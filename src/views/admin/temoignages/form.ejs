@@ -1,0 +1,51 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-card">
+	<form class="admin-form" action="<%= testimonial ? `/admin/temoignages/${testimonial.id}?_method=PUT` : '/admin/temoignages' %>" method="POST" enctype="multipart/form-data">
+		<div class="field">
+			<label for="authorName">Nom de la personne</label>
+			<input type="text" id="authorName" name="authorName" required value="<%= testimonial ? testimonial.authorName : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="authorRole">Rôle / Entreprise</label>
+			<input type="text" id="authorRole" name="authorRole" placeholder="Ex: Directrice RH, Groupe X" value="<%= testimonial && testimonial.authorRole ? testimonial.authorRole : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="quote">Témoignage</label>
+			<textarea id="quote" name="quote" rows="4" required><%= testimonial ? testimonial.quote : '' %></textarea>
+		</div>
+
+		<div class="field">
+			<label for="rating">Note (1 à 5, optionnel)</label>
+			<input type="number" id="rating" name="rating" min="1" max="5" value="<%= testimonial && testimonial.rating ? testimonial.rating : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="order">Ordre d'affichage (0 = en premier)</label>
+			<input type="number" id="order" name="order" value="<%= testimonial ? testimonial.order : 0 %>">
+		</div>
+
+		<div class="field">
+			<label for="photo">Photo (optionnelle)</label>
+			<% if (testimonial && testimonial.photoUrl) { %>
+				<img class="current-image" src="<%= testimonial.photoUrl %>" alt="">
+			<% } %>
+			<input type="file" id="photo" name="photo" accept="image/*">
+			<p class="hint">JPG, PNG ou WEBP, 5 Mo max. Laissez vide pour conserver la photo actuelle.</p>
+		</div>
+
+		<div class="field checkbox-field">
+			<input type="checkbox" id="published" name="published" <%= (!testimonial || testimonial.published) ? 'checked' : '' %>>
+			<label for="published" style="margin-bottom: 0;">Publié (visible sur le site)</label>
+		</div>
+
+		<div class="d-flex gap-10px">
+			<button type="submit" class="admin-btn"><%= testimonial ? 'Enregistrer' : 'Ajouter le témoignage' %></button>
+			<a href="/admin/temoignages" class="admin-btn admin-btn--ghost">Annuler</a>
+		</div>
+	</form>
+</div>
+
+<%- include('../_footer') %>

@@ -1,0 +1,42 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= posts.length %> article(s)</p>
+	<a href="/admin/blog/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Nouvel article</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>Image</th>
+			<th>Titre</th>
+			<th>Catégorie</th>
+			<th>Statut</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (posts.length === 0) { %>
+			<tr><td colspan="5" class="hint">Aucun article pour le moment.</td></tr>
+		<% } %>
+		<% posts.forEach(p => { %>
+			<tr>
+				<td><img class="thumb" src="<%= p.coverImageUrl || '/images/courses/courses-large-01.png' %>" alt=""></td>
+				<td><%= p.title %></td>
+				<td><%= p.category ? p.category.name : '—' %></td>
+				<td><span class="<%= p.published ? 'badge-published' : 'badge-draft' %>"><%= p.published ? 'Publié' : 'Brouillon' %></span></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/blog/<%= p.slug %>" target="_blank" class="admin-btn admin-btn--ghost admin-btn--sm">Voir</a>
+						<a href="/admin/blog/<%= p.id %>/edit" class="admin-btn admin-btn--ghost admin-btn--sm">Modifier</a>
+						<form action="/admin/blog/<%= p.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer cet article ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>

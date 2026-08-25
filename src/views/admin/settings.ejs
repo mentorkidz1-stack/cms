@@ -1,0 +1,187 @@
+<%- include('./_header', { title }) %>
+
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
+<div class="admin-card" style="max-width: 720px;">
+	<form class="admin-form" action="/admin/settings" method="POST" enctype="multipart/form-data">
+		<h3 class="mb-15px">Coordonnées</h3>
+
+		<div class="field">
+			<label for="siteName">Nom du site</label>
+			<input type="text" id="siteName" name="siteName" required value="<%= settingsForm.siteName %>">
+		</div>
+
+		<div class="field">
+			<label for="whatsappNumber">Numéro WhatsApp (format international, sans espaces)</label>
+			<input type="text" id="whatsappNumber" name="whatsappNumber" placeholder="22990000000" value="<%= settingsForm.whatsappNumber %>">
+			<p class="hint">Ce numéro reçoit les messages "S'inscrire" / "Payer maintenant" envoyés depuis le site.</p>
+		</div>
+
+		<div class="field">
+			<label for="contactEmail">Email de contact</label>
+			<input type="email" id="contactEmail" name="contactEmail" value="<%= settingsForm.contactEmail %>">
+		</div>
+
+		<hr class="my-25px">
+		<h3 class="mb-15px">Menu de navigation</h3>
+		<p class="hint mb-15px">Activez ou désactivez les rubriques affichées sur le site. Une rubrique désactivée disparaît du menu et sa page devient inaccessible.</p>
+
+		<div class="menu-toggle-grid">
+			<div class="field checkbox-field">
+				<input type="checkbox" id="showFormations" name="showFormations" <%= settingsForm.showFormations ? 'checked' : '' %>>
+				<label for="showFormations" style="margin-bottom: 0;"><%= settingsForm.formationsLabel %></label>
+			</div>
+			<div class="field checkbox-field">
+				<input type="checkbox" id="showServices" name="showServices" <%= settingsForm.showServices ? 'checked' : '' %>>
+				<label for="showServices" style="margin-bottom: 0;"><%= settingsForm.servicesLabel %></label>
+			</div>
+			<div class="field checkbox-field">
+				<input type="checkbox" id="showGalerie" name="showGalerie" <%= settingsForm.showGalerie ? 'checked' : '' %>>
+				<label for="showGalerie" style="margin-bottom: 0;">Galerie</label>
+			</div>
+			<div class="field checkbox-field">
+				<input type="checkbox" id="showBlog" name="showBlog" <%= settingsForm.showBlog ? 'checked' : '' %>>
+				<label for="showBlog" style="margin-bottom: 0;"><%= settingsForm.blogLabel %></label>
+			</div>
+			<div class="field checkbox-field">
+				<input type="checkbox" id="showTemoignages" name="showTemoignages" <%= settingsForm.showTemoignages ? 'checked' : '' %>>
+				<label for="showTemoignages" style="margin-bottom: 0;">Témoignages</label>
+			</div>
+			<div class="field checkbox-field">
+				<input type="checkbox" id="showEquipe" name="showEquipe" <%= settingsForm.showEquipe ? 'checked' : '' %>>
+				<label for="showEquipe" style="margin-bottom: 0;"><%= settingsForm.equipeLabel %></label>
+			</div>
+			<div class="field checkbox-field">
+				<input type="checkbox" id="showAbout" name="showAbout" <%= settingsForm.showAbout ? 'checked' : '' %>>
+				<label for="showAbout" style="margin-bottom: 0;">À propos</label>
+			</div>
+			<div class="field checkbox-field">
+				<input type="checkbox" id="showPartenaires" name="showPartenaires" <%= settingsForm.showPartenaires ? 'checked' : '' %>>
+				<label for="showPartenaires" style="margin-bottom: 0;">Bandeau Partenaires (accueil)</label>
+			</div>
+		</div>
+		<p class="hint mb-0">Accueil et Contact sont toujours visibles.</p>
+
+		<hr class="my-25px">
+		<h3 class="mb-15px">Vocabulaire du site</h3>
+		<p class="hint mb-15px">Ces mots s'appliquent partout automatiquement : menu, pied de page, page d'accueil, badges des fiches et messages WhatsApp. Par exemple, remplacez "Formations" par "Événements" si c'est plus adapté à votre activité.</p>
+
+		<div class="field">
+			<label for="formationsLabel">Formations — nom de la rubrique (pluriel)</label>
+			<input type="text" id="formationsLabel" name="formationsLabel" required value="<%= settingsForm.formationsLabel %>">
+		</div>
+		<div class="field">
+			<label for="formationsLabelSingular">Formations — nom au singulier</label>
+			<input type="text" id="formationsLabelSingular" name="formationsLabelSingular" required value="<%= settingsForm.formationsLabelSingular %>">
+		</div>
+
+		<div class="field">
+			<label for="servicesLabel">Services — nom de la rubrique (pluriel)</label>
+			<input type="text" id="servicesLabel" name="servicesLabel" required value="<%= settingsForm.servicesLabel %>">
+		</div>
+		<div class="field">
+			<label for="servicesLabelSingular">Services — nom au singulier</label>
+			<input type="text" id="servicesLabelSingular" name="servicesLabelSingular" required value="<%= settingsForm.servicesLabelSingular %>">
+		</div>
+
+		<div class="field">
+			<label for="blogLabel">Blog — nom de la rubrique</label>
+			<input type="text" id="blogLabel" name="blogLabel" required value="<%= settingsForm.blogLabel %>">
+		</div>
+
+		<div class="field">
+			<label for="equipeLabel">Équipe — nom de la rubrique</label>
+			<input type="text" id="equipeLabel" name="equipeLabel" required value="<%= settingsForm.equipeLabel %>">
+		</div>
+
+		<hr class="my-25px">
+		<h3 class="mb-15px">Apparence</h3>
+
+		<div class="field">
+			<label for="primaryColor">Couleur de marque</label>
+			<div class="d-flex align-items-center gap-10px">
+				<input type="color" id="primaryColor" name="primaryColor" value="<%= settingsForm.primaryColor %>" style="width: 60px; height: 40px; padding: 2px;">
+				<span class="hint mb-0">Utilisée pour les boutons, liens et textes mis en avant sur tout le site.</span>
+			</div>
+		</div>
+
+		<div class="field">
+			<label for="banner">Image de la bannière d'accueil</label>
+			<% if (settingsForm.bannerImageUrl) { %>
+				<img class="current-image" src="<%= settingsForm.bannerImageUrl %>" alt="">
+			<% } %>
+			<input type="file" id="banner" name="banner" accept="image/*">
+			<p class="hint">JPG, PNG ou WEBP, 5 Mo max. Laissez vide pour conserver l'image actuelle.</p>
+		</div>
+
+		<hr class="my-25px">
+		<h3 class="mb-15px">Page d'accueil</h3>
+
+		<div class="field">
+			<label for="heroTitle">Titre principal</label>
+			<input type="text" id="heroTitle" name="heroTitle" required value="<%= settingsForm.heroTitle %>">
+			<p class="hint">Entourez un passage de doubles accolades pour le mettre en couleur, ex : Vos données, votre code, votre {{avantage compétitif}}</p>
+		</div>
+
+		<div class="field">
+			<label for="heroSubtitle">Sous-titre</label>
+			<textarea id="heroSubtitle" name="heroSubtitle" rows="3" required><%= settingsForm.heroSubtitle %></textarea>
+		</div>
+
+		<hr class="my-25px">
+		<h3 class="mb-15px">Page "À propos"</h3>
+
+		<div class="field">
+			<label>Contenu de la page</label>
+			<div id="about-editor" class="quill-editor"><%- settingsForm.aboutContent %></div>
+			<input type="hidden" name="aboutContent" id="about-input">
+		</div>
+
+		<hr class="my-25px">
+		<h3 class="mb-15px">Sous-titres des pages</h3>
+		<p class="hint mb-15px">Le grand titre de chaque page reprend automatiquement le nom de rubrique défini ci-dessus. Vous ne renseignez ici que la phrase d'introduction en dessous.</p>
+
+		<div class="field">
+			<label for="formationsSubheading">Page <%= settingsForm.formationsLabel %> — sous-titre</label>
+			<textarea id="formationsSubheading" name="formationsSubheading" rows="2" required><%= settingsForm.formationsSubheading %></textarea>
+		</div>
+
+		<div class="field">
+			<label for="servicesSubheading">Page <%= settingsForm.servicesLabel %> — sous-titre</label>
+			<textarea id="servicesSubheading" name="servicesSubheading" rows="2" required><%= settingsForm.servicesSubheading %></textarea>
+		</div>
+
+		<div class="field">
+			<label for="blogSubheading">Page <%= settingsForm.blogLabel %> — sous-titre</label>
+			<textarea id="blogSubheading" name="blogSubheading" rows="2" required><%= settingsForm.blogSubheading %></textarea>
+		</div>
+
+		<div class="field">
+			<label for="equipeSubheading">Page <%= settingsForm.equipeLabel %> — sous-titre</label>
+			<textarea id="equipeSubheading" name="equipeSubheading" rows="2" required><%= settingsForm.equipeSubheading %></textarea>
+		</div>
+
+		<div class="field">
+			<label for="contactHeading">Page Contact — titre</label>
+			<input type="text" id="contactHeading" name="contactHeading" required value="<%= settingsForm.contactHeading %>">
+		</div>
+		<div class="field">
+			<label for="contactSubheading">Page Contact — sous-titre</label>
+			<textarea id="contactSubheading" name="contactSubheading" rows="2" required><%= settingsForm.contactSubheading %></textarea>
+		</div>
+
+		<button type="submit" class="admin-btn">Enregistrer</button>
+	</form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+	var aboutQuill = new Quill('#about-editor', { theme: 'snow' });
+	var settingsForm = document.querySelector('.admin-form');
+	var aboutInput = document.getElementById('about-input');
+	settingsForm.addEventListener('submit', function () {
+		aboutInput.value = aboutQuill.root.innerHTML;
+	});
+</script>
+
+<%- include('./_footer') %>

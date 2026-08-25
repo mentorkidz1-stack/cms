@@ -1,0 +1,46 @@
+<%- include('../partials/header', { title }) %>
+
+<section class="pt-50px pb-80px">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8">
+				<img src="<%= service.imageUrl || '/images/courses/courses-large-01.png' %>" alt="<%= service.title %>" class="border-radius-10px mb-30px" style="width: 100%; max-height: 420px; object-fit: cover;">
+				<h1 class="fs-30 fw-bolder mb-20px"><%= service.title %></h1>
+				<div class="content-rich fs-16">
+					<%- service.description %>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="border-radius-10px p-25px" style="border: 1px solid #eee; position: sticky; top: 20px;">
+					<p class="price-tag mb-20px"><%= service.price ? service.price.toLocaleString('fr-FR') + ' FCFA' : 'Sur devis' %></p>
+					<% if (whatsappLink) { %>
+						<a href="<%= whatsappLink %>" target="_blank" rel="noopener" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all d-flex align-items-center justify-content-center gap-10px w-100">
+							<i class="iconify fs-20" data-icon="ic:baseline-whatsapp"></i>
+							<span>Payer maintenant via WhatsApp</span>
+						</a>
+					<% } else { %>
+						<a href="/contact" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all d-flex align-items-center justify-content-center gap-10px w-100">
+							<span>Nous contacter</span>
+						</a>
+					<% } %>
+					<p class="fs-13 mt-15px mb-0" style="opacity: 0.65;">Vous serez redirigé(e) vers WhatsApp avec un message pré-rempli.</p>
+				</div>
+			</div>
+		</div>
+
+		<% if (related.length > 0) { %>
+			<div class="mt-60px">
+				<h3 class="fs-24 fw-semibold mb-25px">Autres services</h3>
+				<div class="row">
+					<% related.forEach(s => { %>
+						<div class="col-md-6 col-lg-4 mb-30px">
+							<%- include('../partials/_service-card', { service: s }) %>
+						</div>
+					<% }) %>
+				</div>
+			</div>
+		<% } %>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

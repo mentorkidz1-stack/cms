@@ -1,0 +1,15 @@
+<%- include('../partials/header', { title }) %>
+<%- include('../partials/page-hero', { heading: 'À propos de', highlight: settings.siteName }) %>
+
+<section class="pt-60px pb-80px">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<div class="fs-16 mb-20px content-rich"><%- settings.aboutContent %></div>
+				<a href="/equipe" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all">Découvrir notre équipe</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

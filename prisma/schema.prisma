@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           Int    @id @default(autoincrement())
+  email        String @unique
+  passwordHash String
+}
+
+model Formation {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  description String
+  program     String
+  price       Int
+  imageUrl    String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  description String
+  price       Int?
+  imageUrl    String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
+  posts Post[]
+}
+
+model Post {
+  id            Int       @id @default(autoincrement())
+  title         String
+  slug          String    @unique
+  excerpt       String
+  contentHtml   String
+  coverImageUrl String?
+  categoryId    Int?
+  category      Category? @relation(fields: [categoryId], references: [id])
+  published     Boolean   @default(true)
+  publishedAt   DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model TeamMember {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  role      String
+  bio       String?
+  photoUrl  String?
+  linkedin  String?
+  email     String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Settings {
+  id             Int    @id @default(1)
+  whatsappNumber String @default("")
+  siteName       String @default("CtechAfrica")
+  contactEmail   String @default("")
+  heroTitle      String @default("Vos données, votre code, votre {{avantage compétitif}}")
+  heroSubtitle   String @default("CtechAfrica accompagne les entreprises et les particuliers avec des formations, des services et des solutions en analyse de données, développement informatique et intelligence artificielle.")
+  bannerImageUrl String?
+  aboutContent   String @default("<p>CtechAfrica est une entreprise spécialisée en <strong>analyse de données</strong>, <strong>développement informatique</strong> et <strong>intelligence artificielle</strong>. Nous accompagnons les entreprises et les particuliers grâce à des formations pratiques, des services sur mesure et l'expertise de notre équipe.</p><p>Notre mission : rendre la donnée, le code et l'IA accessibles et utiles, avec des solutions concrètes et un accompagnement humain à chaque étape.</p>")
+  primaryColor   String @default("#356DF1")
+
+  formationsLabel          String @default("Formations")
+  formationsLabelSingular  String @default("Formation")
+  formationsSubheading     String @default("Des parcours pratiques en analyse de données, développement et intelligence artificielle.")
+  servicesLabel            String @default("Services")
+  servicesLabelSingular    String @default("Service")
+  servicesSubheading       String @default("Des solutions sur mesure en data, développement et intelligence artificielle pour votre organisation.")
+  blogLabel                String @default("Blog")
+  blogSubheading           String @default("Actualités, conseils et retours d'expérience en data, développement et intelligence artificielle.")
+  equipeLabel              String @default("Équipe")
+  equipeSubheading         String @default("Des experts en analyse de données, développement informatique et intelligence artificielle.")
+  contactHeading       String @default("Contactez {{nous}}")
+  contactSubheading    String @default("Une question sur nos formations ou nos services ? Écrivez-nous.")
+
+  showFormations  Boolean @default(true)
+  showServices    Boolean @default(true)
+  showBlog        Boolean @default(true)
+  showEquipe      Boolean @default(true)
+  showGalerie     Boolean @default(true)
+  showTemoignages Boolean @default(true)
+  showPartenaires Boolean @default(true)
+  showAbout       Boolean @default(true)
+}
+
+model Testimonial {
+  id         Int      @id @default(autoincrement())
+  authorName String
+  authorRole String?
+  photoUrl   String?
+  quote      String
+  rating     Int?
+  order      Int      @default(0)
+  published  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Partner {
+  id         Int      @id @default(autoincrement())
+  name       String
+  logoUrl    String
+  websiteUrl String?
+  order      Int      @default(0)
+  published  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model GalleryItem {
+  id        Int      @id @default(autoincrement())
+  title     String
+  mediaUrl  String
+  mediaType String   @default("image")
+  category  String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

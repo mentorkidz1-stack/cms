@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="no-js" lang="fr">
+
+<head>
+	<title><%= title %> | <%= settings.siteName %></title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="<%= settings.siteName %> — <%= settings.formationsLabel.toLowerCase() %>, <%= settings.servicesLabel.toLowerCase() %> et solutions en analyse de données, développement informatique et intelligence artificielle.">
+	<link rel="shortcut icon" href="/images/favicon.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/assets/css/swiper-bundle.min.css">
+	<link rel="stylesheet" href="/assets/css/nouislider.min.css">
+	<link rel="stylesheet" href="/assets/css/style.css?v=5.6">
+	<link rel="stylesheet" href="/assets/css/demos/marketplace.css?v=5.6">
+	<link rel="stylesheet" href="/assets/css/animate.css">
+	<link rel="stylesheet" href="/assets/css/site.css">
+	<style>
+		:root { --regal-blue: <%= settings.primaryColor %>; }
+	</style>
+</head>
+
+<body class="mkp-layout">
+
+	<nav class="mkp-navbar navbar navbar-expand-lg pt-15px pb-15px">
+		<div class="container ctech-nav-row">
+			<div class="ctech-nav-row__logo">
+				<a href="/" class="text-logo fw-bolder text-capitalize"><%= settings.siteName %></a>
+			</div>
+			<div class="ctech-nav-row__links">
+				<div class="bars-btn d-lg-none">
+					<span class="iconify fs-24" data-icon="fe:bar"></span>
+				</div>
+				<div class="navbar-custom">
+					<ul class="navbar-nav gap-10px">
+						<li class="nav-item navbar-close d-lg-none">
+							<i class="iconify fs-16" data-icon="teenyicons:left-outline"></i>
+						</li>
+						<li class="nav-item">
+							<a href="/" class="d-block pt-25px pb-25px pe-25px transition-all">Accueil</a>
+						</li>
+						<% if (settings.showFormations) { %>
+							<li class="nav-item">
+								<a href="/formations" class="d-block pt-25px pb-25px pe-25px transition-all"><%= settings.formationsLabel %></a>
+							</li>
+						<% } %>
+						<% if (settings.showServices) { %>
+							<li class="nav-item">
+								<a href="/services" class="d-block pt-25px pb-25px pe-25px transition-all"><%= settings.servicesLabel %></a>
+							</li>
+						<% } %>
+						<% if (settings.showGalerie) { %>
+							<li class="nav-item">
+								<a href="/galerie" class="d-block pt-25px pb-25px pe-25px transition-all">Galerie</a>
+							</li>
+						<% } %>
+						<% if (settings.showBlog) { %>
+							<li class="nav-item">
+								<a href="/blog" class="d-block pt-25px pb-25px pe-25px transition-all"><%= settings.blogLabel %></a>
+							</li>
+						<% } %>
+						<% if (settings.showTemoignages) { %>
+							<li class="nav-item">
+								<a href="/temoignages" class="d-block pt-25px pb-25px pe-25px transition-all">Témoignages</a>
+							</li>
+						<% } %>
+						<% if (settings.showEquipe) { %>
+							<li class="nav-item">
+								<a href="/equipe" class="d-block pt-25px pb-25px pe-25px transition-all"><%= settings.equipeLabel %></a>
+							</li>
+						<% } %>
+						<% if (settings.showAbout) { %>
+							<li class="nav-item">
+								<a href="/about" class="d-block pt-25px pb-25px pe-25px transition-all">À propos</a>
+							</li>
+						<% } %>
+					</ul>
+				</div>
+			</div>
+			<div class="ctech-nav-row__actions">
+				<div class="navbar-act d-flex align-items-center justify-content-end">
+					<a href="/contact" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all">Nous contacter</a>
+				</div>
+			</div>
+		</div>
+	</nav>

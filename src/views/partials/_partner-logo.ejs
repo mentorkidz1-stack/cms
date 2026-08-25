@@ -1,0 +1,9 @@
+<% if (partner.websiteUrl) { %>
+	<a href="<%= partner.websiteUrl %>" target="_blank" rel="noopener" class="partner-logo">
+		<img src="<%= partner.logoUrl %>" alt="<%= partner.name %>">
+	</a>
+<% } else { %>
+	<div class="partner-logo">
+		<img src="<%= partner.logoUrl %>" alt="<%= partner.name %>">
+	</div>
+<% } %>

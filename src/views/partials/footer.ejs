@@ -1,0 +1,67 @@
+<footer class="section-footer mkp-footer pt-80px pb-40px">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-lg-4 mb-30px mb-lg-0">
+				<a href="/" class="section-footer_logo-text d-block mb-20px"><%= settings.siteName %></a>
+				<p class="mb-20px"><%= settings.siteName %> — Analyse de données, développement informatique et intelligence artificielle.</p>
+				<a href="/contact" class="btn button-type-01 fw-semibold d-inline-block border-radius-10px text-capitalize transition-all">Nous contacter</a>
+			</div>
+			<div class="col-6 col-lg-2 mb-20px mb-lg-0">
+				<h4 class="footer__title fs-20 fw-semibold mb-20px">Navigation</h4>
+				<ul>
+					<% if (settings.showFormations) { %><li class="mb-10px"><a class="transition-all" href="/formations"><%= settings.formationsLabel %></a></li><% } %>
+					<% if (settings.showServices) { %><li class="mb-10px"><a class="transition-all" href="/services"><%= settings.servicesLabel %></a></li><% } %>
+					<% if (settings.showGalerie) { %><li class="mb-10px"><a class="transition-all" href="/galerie">Galerie</a></li><% } %>
+					<% if (settings.showBlog) { %><li class="mb-10px"><a class="transition-all" href="/blog"><%= settings.blogLabel %></a></li><% } %>
+					<% if (settings.showTemoignages) { %><li class="mb-10px"><a class="transition-all" href="/temoignages">Témoignages</a></li><% } %>
+					<% if (settings.showEquipe) { %><li class="mb-10px"><a class="transition-all" href="/equipe"><%= settings.equipeLabel %></a></li><% } %>
+				</ul>
+			</div>
+			<div class="col-6 col-lg-2 mb-20px mb-lg-0">
+				<h4 class="footer__title fs-20 fw-semibold mb-20px">Entreprise</h4>
+				<ul>
+					<% if (settings.showAbout) { %><li class="mb-10px"><a class="transition-all" href="/about">À propos</a></li><% } %>
+					<li class="mb-10px"><a class="transition-all" href="/contact">Contact</a></li>
+					<li class="mb-10px"><a class="transition-all" href="/admin">Espace admin</a></li>
+				</ul>
+			</div>
+			<div class="col-12 col-lg-4">
+				<h4 class="footer__title fs-20 fw-semibold mb-20px">Contact</h4>
+				<ul>
+					<% if (settings.contactEmail) { %>
+						<li class="mb-10px"><a class="transition-all" href="mailto:<%= settings.contactEmail %>"><%= settings.contactEmail %></a></li>
+					<% } %>
+					<% if (settings.whatsappNumber) { %>
+						<li class="mb-10px"><a class="transition-all" href="https://wa.me/<%= settings.whatsappNumber.replace(/[^0-9]/g, '') %>" target="_blank" rel="noopener">WhatsApp : <%= settings.whatsappNumber %></a></li>
+					<% } %>
+				</ul>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<section class="section-footer-end mkp-footer-end-01 pt-15px pb-15px">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 text-center">
+				<p>&copy; <%= new Date().getFullYear() %> <span class="hl-style"><%= settings.siteName %></span>. Tous droits réservés.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<% if (settings.whatsappNumber) { %>
+	<a href="https://wa.me/<%= settings.whatsappNumber.replace(/[^0-9]/g, '') %>?text=<%= encodeURIComponent(`Bonjour ${settings.siteName}, j'aimerais avoir plus d'informations.`) %>"
+	   target="_blank" rel="noopener" class="wa-float-btn" aria-label="Discuter sur WhatsApp">
+		<i class="iconify fs-28" data-icon="ic:baseline-whatsapp"></i>
+	</a>
+<% } %>
+
+<script type="text/javascript" src="/assets/js/iconify.min.js" defer></script>
+<script type="text/javascript" src="/assets/js/swiper-bundle.min.js" defer></script>
+<script type="text/javascript" src="/assets/js/swiper-control.js?v=5.6" defer></script>
+<script type="text/javascript" src="/assets/js/main.js?v=5.6" defer></script>
+<script type="text/javascript" src="/assets/js/wow.min.js" defer></script>
+</body>
+
+</html>

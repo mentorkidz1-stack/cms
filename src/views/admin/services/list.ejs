@@ -1,0 +1,42 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= services.length %> service(s)</p>
+	<a href="/admin/services/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Nouveau service</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>Image</th>
+			<th>Titre</th>
+			<th>Prix</th>
+			<th>Statut</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (services.length === 0) { %>
+			<tr><td colspan="5" class="hint">Aucun service pour le moment.</td></tr>
+		<% } %>
+		<% services.forEach(s => { %>
+			<tr>
+				<td><img class="thumb" src="<%= s.imageUrl || '/images/courses/courses-large-01.png' %>" alt=""></td>
+				<td><%= s.title %></td>
+				<td><%= s.price ? s.price.toLocaleString('fr-FR') + ' FCFA' : 'Sur devis' %></td>
+				<td><span class="<%= s.published ? 'badge-published' : 'badge-draft' %>"><%= s.published ? 'Publié' : 'Brouillon' %></span></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/services/<%= s.slug %>" target="_blank" class="admin-btn admin-btn--ghost admin-btn--sm">Voir</a>
+						<a href="/admin/services/<%= s.id %>/edit" class="admin-btn admin-btn--ghost admin-btn--sm">Modifier</a>
+						<form action="/admin/services/<%= s.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer ce service ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>

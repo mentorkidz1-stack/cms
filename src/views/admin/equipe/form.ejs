@@ -1,0 +1,56 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-card">
+	<form class="admin-form" action="<%= member ? `/admin/equipe/${member.id}?_method=PUT` : '/admin/equipe' %>" method="POST" enctype="multipart/form-data">
+		<div class="field">
+			<label for="name">Nom complet</label>
+			<input type="text" id="name" name="name" required value="<%= member ? member.name : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="role">Rôle / Poste</label>
+			<input type="text" id="role" name="role" required placeholder="Ex: Data Analyst, Développeur IA" value="<%= member ? member.role : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="bio">Bio</label>
+			<textarea id="bio" name="bio" rows="5"><%= member ? member.bio : '' %></textarea>
+		</div>
+
+		<div class="field">
+			<label for="linkedin">Lien LinkedIn</label>
+			<input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/..." value="<%= member && member.linkedin ? member.linkedin : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="email">Email</label>
+			<input type="email" id="email" name="email" value="<%= member && member.email ? member.email : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="order">Ordre d'affichage (0 = en premier)</label>
+			<input type="number" id="order" name="order" value="<%= member ? member.order : 0 %>">
+		</div>
+
+		<div class="field">
+			<label for="photo">Photo</label>
+			<% if (member && member.photoUrl) { %>
+				<img class="current-image" src="<%= member.photoUrl %>" alt="">
+			<% } %>
+			<input type="file" id="photo" name="photo" accept="image/*">
+			<p class="hint">JPG, PNG ou WEBP, 5 Mo max. Laissez vide pour conserver la photo actuelle.</p>
+		</div>
+
+		<div class="field checkbox-field">
+			<input type="checkbox" id="published" name="published" <%= (!member || member.published) ? 'checked' : '' %>>
+			<label for="published" style="margin-bottom: 0;">Publié (visible sur le site)</label>
+		</div>
+
+		<div class="d-flex gap-10px">
+			<button type="submit" class="admin-btn"><%= member ? 'Enregistrer' : 'Ajouter le membre' %></button>
+			<a href="/admin/equipe" class="admin-btn admin-btn--ghost">Annuler</a>
+		</div>
+	</form>
+</div>
+
+<%- include('../_footer') %>

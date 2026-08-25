@@ -1,0 +1,36 @@
+<%- include('../partials/header', { title }) %>
+
+<section class="pt-50px pb-80px">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<% if (post.category) { %>
+					<span class="hl-style fs-12 fw-semibold text-uppercase d-inline-block mb-10px"><%= post.category.name %></span>
+				<% } %>
+				<h1 class="fs-32 fw-bolder mb-15px"><%= post.title %></h1>
+				<p class="fs-13 text-uppercase mb-25px" style="opacity: 0.65;">
+					<%= new Date(post.publishedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+				</p>
+				<img src="<%= post.coverImageUrl || '/images/courses/courses-large-01.png' %>" alt="<%= post.title %>" class="border-radius-10px mb-30px" style="width: 100%; max-height: 420px; object-fit: cover;">
+				<div class="content-rich fs-16">
+					<%- post.contentHtml %>
+				</div>
+			</div>
+		</div>
+
+		<% if (related.length > 0) { %>
+			<div class="mt-60px">
+				<h3 class="fs-24 fw-semibold mb-25px text-center">À lire aussi</h3>
+				<div class="row justify-content-center">
+					<% related.forEach(p => { %>
+						<div class="col-md-6 col-lg-4">
+							<%- include('../partials/_post-card', { post: p }) %>
+						</div>
+					<% }) %>
+				</div>
+			</div>
+		<% } %>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

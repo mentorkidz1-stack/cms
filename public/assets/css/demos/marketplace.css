@@ -1,0 +1,241 @@
+@font-face {
+  font-family: "Poppins";
+  src: url("../../fonts/Poppins/Poppins-Regular.woff2") format("woff2"), url("../../fonts/Poppins/Poppins-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../../fonts/Poppins/Poppins-Medium.woff2") format("woff2"), url("../../fonts/Poppins/Poppins-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../../fonts/Poppins/Poppins-SemiBold.woff2") format("woff2"), url("../../fonts/Poppins/Poppins-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../../fonts/Poppins/Poppins-Bold.woff2") format("woff2"), url("../../fonts/Poppins/Poppins-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../../fonts/Inter/Inter-Regular.woff2") format("woff2"), url("../../fonts/Inter/Inter-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../../fonts/Inter/Inter-Medium.woff2") format("woff2"), url("../../fonts/Inter/Inter-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../../fonts/Inter/Inter-SemiBold.woff2") format("woff2"), url("../../fonts/Inter/Inter-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../../fonts/Inter/Inter-Bold.woff2") format("woff2"), url("../../fonts/Inter/Inter-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+.mkp-layout {
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  color: var(--regal-grey);
+}
+.mkp-layout h1,
+.mkp-layout h2,
+.mkp-layout h3,
+.mkp-layout h4,
+.mkp-layout h5,
+.mkp-layout h6 {
+  font-family: "Poppins", sans-serif;
+  color: var(--regal-black-v1);
+}
+.mkp-layout a {
+  color: var(--regal-black-v1);
+}
+
+.mkp-notification {
+  padding: 12px 0;
+  background-color: var(--regal-blue);
+}
+
+.mkp-head .head-line {
+  border-bottom: 1px solid #E4E4E4;
+}
+.mkp-head ul.head__nav li a:hover {
+  color: var(--regal-blue);
+}
+.mkp-head .head__search {
+  width: 100%;
+}
+.mkp-head .head__search .search__icon {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+}
+.mkp-head input {
+  width: 100%;
+  height: 44px;
+  line-height: 44px;
+  border-radius: 10px;
+  background-color: #E1E9FD;
+  padding-left: 55px;
+  padding-right: 30px;
+  font-size: 14px;
+}
+
+.mkp-banner h1 {
+  font-family: "Poppins", sans-serif;
+}
+.mkp-banner .hl-style {
+  color: var(--regal-blue);
+}
+.mkp-banner .button:nth-child(1) {
+  padding-left: 52px;
+  padding-right: 52px;
+}
+.mkp-banner .button:nth-child(2) {
+  padding: 9px 90px;
+  color: var(--regal-black-v1);
+  background-color: var(--regal-white);
+  border: 2px solid var(--regal-black-v2);
+}
+.mkp-banner .button:nth-child(2):hover {
+  color: var(--regal-white);
+  background-color: var(--regal-black-v2);
+}
+@media (max-width: 1024px) {
+  .mkp-banner .mkp-banner__left {
+    padding-right: 0;
+  }
+  .mkp-banner .mkp-banner__right {
+    padding-left: 0;
+  }
+}
+
+.mkp-outstanding .outstanding__top a:hover {
+  color: var(--regal-blue);
+}
+.mkp-outstanding .outstanding__items img {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.mkp-outstanding .outstanding__items h6:hover {
+  color: var(--regal-blue);
+}
+.mkp-outstanding .outstanding__categories {
+  background-color: var(--regal-grey-v1);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.mkp-outstanding .outstanding__categories_num {
+  color: var(--regal-grey);
+}
+.mkp-outstanding .hl-style {
+  color: var(--regal-blue);
+}
+
+.mkp-expect {
+  background-color: var(--regal-grey-v1);
+}
+.mkp-expect .hl-style {
+  color: var(--regal-blue);
+}
+.mkp-expect .expect__brief {
+  color: var(--regal-grey);
+}
+.mkp-expect .expect-icon {
+  color: var(--regal-blue);
+}
+
+.mkp-learning {
+  background-color: var(--regal-blue);
+}
+
+.mkp-blog .hl-style {
+  color: var(--regal-blue);
+}
+
+.mkp-release .hl-style {
+  color: var(--regal-blue);
+}
+.mkp-release .release__top a:hover {
+  color: var(--regal-blue);
+}
+.mkp-release .release__items__top img {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.mkp-release .release__items__cate {
+  position: absolute;
+  z-index: 999;
+  top: 12px;
+  left: 12px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background-color: var(--regal-orange);
+}
+.mkp-release .release__items__price {
+  color: var(--regal-blue);
+}
+.mkp-release .release__items__bottom {
+  background-color: var(--regal-grey-v1);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.mkp-release .release__items__title a:hover {
+  color: var(--regal-blue);
+}
+.mkp-release .release__items__author a:hover {
+  color: var(--regal-blue);
+}
+.mkp-release .release__items__brief {
+  color: var(--regal-grey);
+}
+.mkp-release .release__items__release {
+  color: var(--regal-grey);
+}
+.mkp-release .button-type-01 {
+  width: auto;
+  text-align: center;
+}
+
+.mkp-testimonial .testimonial__wrapper {
+  background-color: #E1E9FD;
+}
+.mkp-testimonial .testimonial__info {
+  color: var(--regal-grey);
+}
+.mkp-testimonial .testimonial__content {
+  padding-right: 60px;
+}
+
+.mkp-instructors {
+  background-color: #ECEDEF;
+}
+.mkp-instructors .hl-style {
+  color: var(--regal-blue);
+}
+.mkp-instructors .instructors__brief {
+  color: var(--regal-grey);
+}

@@ -1,0 +1,15 @@
+<section class="page-hero pt-60px pb-60px" style="background-color: #f5f7fb;">
+	<div class="container text-center">
+		<h1 class="fw-bolder mb-10px">
+			<% if (typeof title !== 'undefined' && title) { %>
+				<%- renderHighlighted(title) %>
+			<% } else { %>
+				<%= heading %>
+				<% if (typeof highlight !== 'undefined' && highlight) { %><span class="hl-style"><%= highlight %></span><% } %>
+			<% } %>
+		</h1>
+		<% if (typeof subheading !== 'undefined' && subheading) { %>
+			<p class="mb-0 mx-auto" style="max-width: 640px;"><%= subheading %></p>
+		<% } %>
+	</div>
+</section>

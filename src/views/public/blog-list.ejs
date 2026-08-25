@@ -1,0 +1,29 @@
+<%- include('../partials/header', { title }) %>
+<%- include('../partials/page-hero', { title: `{{${settings.blogLabel}}}`, subheading: settings.blogSubheading }) %>
+
+<section class="pt-60px pb-80px">
+	<div class="container">
+		<% if (categories.length > 0) { %>
+			<div class="d-flex flex-wrap gap-10px justify-content-center mb-40px">
+				<a href="/blog" class="fs-14 fw-semibold transition-all pt-8px pb-8px pe-15px ps-15px border-radius-20px <%= !activeCategory ? 'button button-type-01 text-white' : '' %>" style="<%= !activeCategory ? '' : 'border: 1px solid #ddd;' %>">Tous</a>
+				<% categories.forEach(cat => { %>
+					<a href="/blog?categorie=<%= cat.slug %>" class="fs-14 fw-semibold transition-all pt-8px pb-8px pe-15px ps-15px border-radius-20px <%= activeCategory === cat.slug ? 'button button-type-01 text-white' : '' %>" style="<%= activeCategory === cat.slug ? '' : 'border: 1px solid #ddd;' %>"><%= cat.name %></a>
+				<% }) %>
+			</div>
+		<% } %>
+
+		<% if (posts.length === 0) { %>
+			<p class="text-center">Aucun article publié pour le moment.</p>
+		<% } else { %>
+			<div class="row">
+				<% posts.forEach(post => { %>
+					<div class="col-md-6 col-lg-4">
+						<%- include('../partials/_post-card', { post }) %>
+					</div>
+				<% }) %>
+			</div>
+		<% } %>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

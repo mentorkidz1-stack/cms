@@ -1,0 +1,41 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-card">
+	<form class="admin-form" action="<%= partner ? `/admin/partenaires/${partner.id}?_method=PUT` : '/admin/partenaires' %>" method="POST" enctype="multipart/form-data">
+		<div class="field">
+			<label for="name">Nom du partenaire</label>
+			<input type="text" id="name" name="name" required value="<%= partner ? partner.name : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="websiteUrl">Lien du site (optionnel)</label>
+			<input type="url" id="websiteUrl" name="websiteUrl" placeholder="https://..." value="<%= partner && partner.websiteUrl ? partner.websiteUrl : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="order">Ordre d'affichage (0 = en premier)</label>
+			<input type="number" id="order" name="order" value="<%= partner ? partner.order : 0 %>">
+		</div>
+
+		<div class="field">
+			<label for="logo">Logo</label>
+			<% if (partner && partner.logoUrl) { %>
+				<img class="current-image" style="object-fit: contain; background: #f5f7fb;" src="<%= partner.logoUrl %>" alt="">
+			<% } %>
+			<input type="file" id="logo" name="logo" accept="image/*" <%= partner ? '' : 'required' %>>
+			<p class="hint">PNG avec fond transparent de préférence, 5 Mo max. Laissez vide pour conserver le logo actuel.</p>
+		</div>
+
+		<div class="field checkbox-field">
+			<input type="checkbox" id="published" name="published" <%= (!partner || partner.published) ? 'checked' : '' %>>
+			<label for="published" style="margin-bottom: 0;">Publié (visible sur le site)</label>
+		</div>
+
+		<div class="d-flex gap-10px">
+			<button type="submit" class="admin-btn"><%= partner ? 'Enregistrer' : 'Ajouter le partenaire' %></button>
+			<a href="/admin/partenaires" class="admin-btn admin-btn--ghost">Annuler</a>
+		</div>
+	</form>
+</div>
+
+<%- include('../_footer') %>

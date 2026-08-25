@@ -1,0 +1,20 @@
+<%- include('../partials/header', { title }) %>
+<%- include('../partials/page-hero', { title: `{{${settings.servicesLabel}}}`, subheading: settings.servicesSubheading }) %>
+
+<section class="pt-60px pb-80px">
+	<div class="container">
+		<% if (services.length === 0) { %>
+			<p class="text-center">Aucun service publié pour le moment. Revenez bientôt !</p>
+		<% } else { %>
+			<div class="row">
+				<% services.forEach(service => { %>
+					<div class="col-md-6 col-lg-4 mb-30px">
+						<%- include('../partials/_service-card', { service }) %>
+					</div>
+				<% }) %>
+			</div>
+		<% } %>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

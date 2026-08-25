@@ -1,0 +1,19 @@
+<div class="testimonial-card">
+	<% if (testimonial.rating) { %>
+		<div class="testimonial-card__rating">
+			<% for (let i = 1; i <= 5; i++) { %>
+				<i class="iconify fs-16" data-icon="<%= i <= testimonial.rating ? 'mdi:star' : 'mdi:star-outline' %>" style="color: #f2994a;"></i>
+			<% } %>
+		</div>
+	<% } %>
+	<p class="testimonial-card__quote fs-15">« <%= testimonial.quote %> »</p>
+	<div class="testimonial-card__author">
+		<img src="<%= testimonial.photoUrl || '/images/avatar/user.png' %>" alt="<%= testimonial.authorName %>">
+		<div>
+			<p class="fs-14 fw-semibold mb-0"><%= testimonial.authorName %></p>
+			<% if (testimonial.authorRole) { %>
+				<p class="fs-13 mb-0" style="opacity: 0.65;"><%= testimonial.authorRole %></p>
+			<% } %>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,68 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-card">
+	<form class="admin-form" action="<%= item ? `/admin/galerie/${item.id}?_method=PUT` : '/admin/galerie' %>" method="POST" enctype="multipart/form-data">
+		<div class="field">
+			<label for="title">Titre</label>
+			<input type="text" id="title" name="title" required value="<%= item ? item.title : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="category">Catégorie / Événement (optionnel)</label>
+			<input type="text" id="category" name="category" placeholder="Ex: Atelier IA 2026" value="<%= item && item.category ? item.category : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="mediaType">Type de média</label>
+			<select id="mediaType" name="mediaType">
+				<option value="image" <%= (!item || item.mediaType === 'image') ? 'selected' : '' %>>Photo</option>
+				<option value="video" <%= (item && item.mediaType === 'video') ? 'selected' : '' %>>Vidéo (lien YouTube / Vimeo / Facebook)</option>
+			</select>
+		</div>
+
+		<div class="field" id="image-field">
+			<label for="media">Photo</label>
+			<% if (item && item.mediaType !== 'video' && item.mediaUrl) { %>
+				<img class="current-image" src="<%= item.mediaUrl %>" alt="">
+			<% } %>
+			<input type="file" id="media" name="media" accept="image/*">
+			<p class="hint">JPG, PNG ou WEBP, 5 Mo max. Laissez vide pour conserver l'image actuelle.</p>
+		</div>
+
+		<div class="field" id="video-field" style="display: none;">
+			<label for="videoUrl">Lien de la vidéo</label>
+			<input type="url" id="videoUrl" name="videoUrl" placeholder="https://youtube.com/..." value="<%= item && item.mediaType === 'video' ? item.mediaUrl : '' %>">
+			<p class="hint">Un lien vers une vidéo hébergée sur YouTube, Vimeo, Facebook, etc.</p>
+		</div>
+
+		<div class="field">
+			<label for="order">Ordre d'affichage (0 = en premier)</label>
+			<input type="number" id="order" name="order" value="<%= item ? item.order : 0 %>">
+		</div>
+
+		<div class="field checkbox-field">
+			<input type="checkbox" id="published" name="published" <%= (!item || item.published) ? 'checked' : '' %>>
+			<label for="published" style="margin-bottom: 0;">Publié (visible sur le site)</label>
+		</div>
+
+		<div class="d-flex gap-10px">
+			<button type="submit" class="admin-btn"><%= item ? 'Enregistrer' : 'Ajouter' %></button>
+			<a href="/admin/galerie" class="admin-btn admin-btn--ghost">Annuler</a>
+		</div>
+	</form>
+</div>
+
+<script>
+	var mediaTypeSelect = document.getElementById('mediaType');
+	var imageField = document.getElementById('image-field');
+	var videoField = document.getElementById('video-field');
+	function toggleMediaFields() {
+		var isVideo = mediaTypeSelect.value === 'video';
+		imageField.style.display = isVideo ? 'none' : 'block';
+		videoField.style.display = isVideo ? 'block' : 'none';
+	}
+	mediaTypeSelect.addEventListener('change', toggleMediaFields);
+	toggleMediaFields();
+</script>
+
+<%- include('../_footer') %>

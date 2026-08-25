@@ -1,0 +1,64 @@
+<%- include('./_header', { title }) %>
+
+<div class="row g-4">
+	<div class="col-md-3">
+		<div class="admin-card text-center">
+			<p class="hint mb-5px">Formations</p>
+			<h2 style="font-size: 32px; margin: 0;"><%= counts.formations %></h2>
+			<a href="/admin/formations" class="admin-btn admin-btn--ghost admin-btn--sm mt-15px">Gérer</a>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="admin-card text-center">
+			<p class="hint mb-5px">Services</p>
+			<h2 style="font-size: 32px; margin: 0;"><%= counts.services %></h2>
+			<a href="/admin/services" class="admin-btn admin-btn--ghost admin-btn--sm mt-15px">Gérer</a>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="admin-card text-center">
+			<p class="hint mb-5px">Articles de blog</p>
+			<h2 style="font-size: 32px; margin: 0;"><%= counts.posts %></h2>
+			<a href="/admin/blog" class="admin-btn admin-btn--ghost admin-btn--sm mt-15px">Gérer</a>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="admin-card text-center">
+			<p class="hint mb-5px">Membres de l'équipe</p>
+			<h2 style="font-size: 32px; margin: 0;"><%= counts.team %></h2>
+			<a href="/admin/equipe" class="admin-btn admin-btn--ghost admin-btn--sm mt-15px">Gérer</a>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="admin-card text-center">
+			<p class="hint mb-5px">Galerie</p>
+			<h2 style="font-size: 32px; margin: 0;"><%= counts.gallery %></h2>
+			<a href="/admin/galerie" class="admin-btn admin-btn--ghost admin-btn--sm mt-15px">Gérer</a>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="admin-card text-center">
+			<p class="hint mb-5px">Témoignages</p>
+			<h2 style="font-size: 32px; margin: 0;"><%= counts.testimonials %></h2>
+			<a href="/admin/temoignages" class="admin-btn admin-btn--ghost admin-btn--sm mt-15px">Gérer</a>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="admin-card text-center">
+			<p class="hint mb-5px">Partenaires</p>
+			<h2 style="font-size: 32px; margin: 0;"><%= counts.partners %></h2>
+			<a href="/admin/partenaires" class="admin-btn admin-btn--ghost admin-btn--sm mt-15px">Gérer</a>
+		</div>
+	</div>
+</div>
+
+<div class="admin-card mt-30px">
+	<h3 style="margin-top: 0;">Bienvenue 👋</h3>
+	<p class="hint">
+		Depuis ce tableau de bord, gérez vos Formations, Services, articles de Blog et membres de l'Équipe.
+		Pensez à renseigner votre numéro WhatsApp dans <a href="/admin/settings">Paramètres</a> pour activer
+		les boutons "S'inscrire" / "Payer maintenant" sur le site.
+	</p>
+</div>
+
+<%- include('./_footer') %>
