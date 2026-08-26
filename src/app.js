@@ -14,6 +14,11 @@ const adminRoutes = require('./routes/admin');
 
 const app = express();
 
+// Derrière Nginx (reverse proxy) : sans ceci, Express ignore l'en-tête
+// X-Forwarded-Proto et pense que toutes les requêtes sont en HTTP, ce qui
+// empêche express-session de poser le cookie "secure" en production.
+app.set('trust proxy', 1);
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.locals.stripHtml = stripHtml;
