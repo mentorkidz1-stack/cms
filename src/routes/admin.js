@@ -4,8 +4,11 @@ const rateLimit = require('express-rate-limit');
 
 const prisma = require('../db');
 const upload = require('../middleware/upload');
+const { uploadTestimonial, uploadSettings, uploadSignatory } = require('../middleware/upload');
 const { requireAdmin, redirectIfAuthenticated } = require('../middleware/auth');
 const { uniqueSlug } = require('../utils/slugify');
+const { generateReceiptPdf, generateCertificatePdf } = require('../utils/pdf');
+const { optimizeLogoImage } = require('../utils/image');
 
 const router = express.Router();
 
@@ -97,7 +100,7 @@ router.get('/formations/new', (req, res) => {
 
 router.post('/formations', upload.single('image'), async (req, res, next) => {
   try {
-    const { title, description, program, price, published } = req.body;
+    const { title, description, program, price, sessionDate, totalSeats, seatsTaken, published } = req.body;
     const slug = await uniqueSlug(prisma.formation, title);
     await prisma.formation.create({
       data: {
@@ -107,6 +110,9 @@ router.post('/formations', upload.single('image'), async (req, res, next) => {
         program,
         price: parseInt(price, 10) || 0,
         imageUrl: uploadedPath(req.file),
+        sessionDate: sessionDate ? new Date(sessionDate) : null,
+        totalSeats: totalSeats ? parseInt(totalSeats, 10) : null,
+        seatsTaken: parseInt(seatsTaken, 10) || 0,
         published: published === 'on',
       },
     });
@@ -130,7 +136,7 @@ router.get('/formations/:id/edit', async (req, res, next) => {
 router.put('/formations/:id', upload.single('image'), async (req, res, next) => {
   try {
     const id = Number(req.params.id);
-    const { title, description, program, price, published } = req.body;
+    const { title, description, program, price, sessionDate, totalSeats, seatsTaken, published } = req.body;
     const existing = await prisma.formation.findUnique({ where: { id } });
     if (!existing) return res.status(404).send('Formation introuvable');
     const slug = title !== existing.title ? await uniqueSlug(prisma.formation, title, id) : existing.slug;
@@ -143,6 +149,9 @@ router.put('/formations/:id', upload.single('image'), async (req, res, next) => 
         program,
         price: parseInt(price, 10) || 0,
         imageUrl: uploadedPath(req.file) || existing.imageUrl,
+        sessionDate: sessionDate ? new Date(sessionDate) : null,
+        totalSeats: totalSeats ? parseInt(totalSeats, 10) : null,
+        seatsTaken: parseInt(seatsTaken, 10) || 0,
         published: published === 'on',
       },
     });
@@ -450,9 +459,31 @@ router.get('/temoignages/new', (req, res) => {
   res.render('admin/temoignages/form', { title: 'Nouveau témoignage', testimonial: null });
 });
 
-router.post('/temoignages', upload.single('photo'), async (req, res, next) => {
+function testimonialMediaFields(req, existing) {
+  const { mediaType, videoUrl } = req.body;
+  const photoFile = req.files && req.files.photo ? req.files.photo[0] : null;
+  const audioFile = req.files && req.files.audioFile ? req.files.audioFile[0] : null;
+
+  let mediaUrl = existing ? existing.mediaUrl : null;
+  if (mediaType === 'audio') {
+    mediaUrl = uploadedPath(audioFile) || (existing && existing.mediaType === 'audio' ? existing.mediaUrl : null);
+  } else if (mediaType === 'video') {
+    mediaUrl = videoUrl || null;
+  } else {
+    mediaUrl = null;
+  }
+
+  return {
+    photoUrl: uploadedPath(photoFile) || (existing ? existing.photoUrl : undefined),
+    mediaType: ['audio', 'video'].includes(mediaType) ? mediaType : 'text',
+    mediaUrl,
+  };
+}
+
+router.post('/temoignages', uploadTestimonial, async (req, res, next) => {
   try {
     const { authorName, authorRole, quote, rating, order, published } = req.body;
+    const media = testimonialMediaFields(req, null);
     await prisma.testimonial.create({
       data: {
         authorName,
@@ -460,8 +491,8 @@ router.post('/temoignages', upload.single('photo'), async (req, res, next) => {
         quote,
         rating: rating ? parseInt(rating, 10) : null,
         order: parseInt(order, 10) || 0,
-        photoUrl: uploadedPath(req.file),
         published: published === 'on',
+        ...media,
       },
     });
     req.flash('success', 'Témoignage ajouté.');
@@ -481,12 +512,13 @@ router.get('/temoignages/:id/edit', async (req, res, next) => {
   }
 });
 
-router.put('/temoignages/:id', upload.single('photo'), async (req, res, next) => {
+router.put('/temoignages/:id', uploadTestimonial, async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     const { authorName, authorRole, quote, rating, order, published } = req.body;
     const existing = await prisma.testimonial.findUnique({ where: { id } });
     if (!existing) return res.status(404).send('Témoignage introuvable');
+    const media = testimonialMediaFields(req, existing);
     await prisma.testimonial.update({
       where: { id },
       data: {
@@ -495,8 +527,8 @@ router.put('/temoignages/:id', upload.single('photo'), async (req, res, next) =>
         quote,
         rating: rating ? parseInt(rating, 10) : null,
         order: parseInt(order, 10) || 0,
-        photoUrl: uploadedPath(req.file) || existing.photoUrl,
         published: published === 'on',
+        ...media,
       },
     });
     req.flash('success', 'Témoignage mis à jour.');
@@ -675,6 +707,243 @@ router.delete('/galerie/:id', async (req, res, next) => {
   }
 });
 
+// ---------- Signataires ----------
+
+router.get('/signataires', async (req, res, next) => {
+  try {
+    const signatories = await prisma.signatory.findMany({ orderBy: [{ isDefault: 'desc' }, { fullName: 'asc' }] });
+    res.render('admin/signataires/list', { title: 'Signataires', signatories });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/signataires/new', (req, res) => {
+  res.render('admin/signataires/form', { title: 'Nouveau signataire', signatory: null });
+});
+
+async function setSingleDefault(newDefaultId) {
+  await prisma.signatory.updateMany({ where: { isDefault: true }, data: { isDefault: false } });
+  if (newDefaultId) {
+    await prisma.signatory.update({ where: { id: newDefaultId }, data: { isDefault: true } });
+  }
+}
+
+router.post('/signataires', uploadSignatory, async (req, res, next) => {
+  try {
+    const { fullName, title, isDefault } = req.body;
+    const signatureFile = req.files && req.files.signature ? req.files.signature[0] : null;
+    const stampFile = req.files && req.files.stamp ? req.files.stamp[0] : null;
+
+    const count = await prisma.signatory.count();
+    const signatory = await prisma.signatory.create({
+      data: {
+        fullName,
+        title,
+        signatureUrl: uploadedPath(signatureFile),
+        stampUrl: uploadedPath(stampFile),
+        isDefault: count === 0 ? true : isDefault === 'on',
+      },
+    });
+    if (signatory.isDefault) await setSingleDefault(signatory.id);
+    req.flash('success', 'Signataire ajouté.');
+    res.redirect('/admin/signataires');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/signataires/:id/edit', async (req, res, next) => {
+  try {
+    const signatory = await prisma.signatory.findUnique({ where: { id: Number(req.params.id) } });
+    if (!signatory) return res.status(404).send('Signataire introuvable');
+    res.render('admin/signataires/form', { title: 'Modifier le signataire', signatory });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/signataires/:id', uploadSignatory, async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const { fullName, title, isDefault } = req.body;
+    const existing = await prisma.signatory.findUnique({ where: { id } });
+    if (!existing) return res.status(404).send('Signataire introuvable');
+    const signatureFile = req.files && req.files.signature ? req.files.signature[0] : null;
+    const stampFile = req.files && req.files.stamp ? req.files.stamp[0] : null;
+
+    await prisma.signatory.update({
+      where: { id },
+      data: {
+        fullName,
+        title,
+        signatureUrl: uploadedPath(signatureFile) || existing.signatureUrl,
+        stampUrl: uploadedPath(stampFile) || existing.stampUrl,
+        isDefault: isDefault === 'on',
+      },
+    });
+    if (isDefault === 'on') await setSingleDefault(id);
+    req.flash('success', 'Signataire mis à jour.');
+    res.redirect('/admin/signataires');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/signataires/:id', async (req, res, next) => {
+  try {
+    await prisma.signatory.delete({ where: { id: Number(req.params.id) } });
+    req.flash('success', 'Signataire supprimé.');
+    res.redirect('/admin/signataires');
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ---------- Reçus ----------
+
+async function nextNumber(model, prefix) {
+  const count = await model.count();
+  const year = new Date().getFullYear();
+  return `${prefix}-${year}-${String(count + 1).padStart(4, '0')}`;
+}
+
+router.get('/recus', async (req, res, next) => {
+  try {
+    const receipts = await prisma.receipt.findMany({ orderBy: { createdAt: 'desc' } });
+    res.render('admin/recus/list', { title: 'Reçus', receipts });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/recus/new', async (req, res, next) => {
+  try {
+    const formations = await prisma.formation.findMany({ orderBy: { title: 'asc' } });
+    const services = await prisma.service.findMany({ orderBy: { title: 'asc' } });
+    const signatories = await prisma.signatory.findMany({ orderBy: [{ isDefault: 'desc' }, { fullName: 'asc' }] });
+    res.render('admin/recus/form', { title: 'Nouveau reçu', formations, services, signatories });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/recus', async (req, res, next) => {
+  try {
+    const { clientName, clientPhone, itemLabel, amount, paymentMethod, paymentDate, notes, signatoryId } = req.body;
+    const receiptNumber = await nextNumber(prisma.receipt, 'REC');
+    const receipt = await prisma.receipt.create({
+      data: {
+        receiptNumber,
+        clientName,
+        clientPhone,
+        itemLabel,
+        amount: parseInt(amount, 10) || 0,
+        paymentMethod,
+        paymentDate: paymentDate ? new Date(paymentDate) : new Date(),
+        notes,
+        signatoryId: signatoryId ? Number(signatoryId) : null,
+      },
+    });
+    req.flash('success', 'Reçu créé.');
+    res.redirect(`/admin/recus/${receipt.id}/pdf`);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/recus/:id/pdf', async (req, res, next) => {
+  try {
+    const receipt = await prisma.receipt.findUnique({
+      where: { id: Number(req.params.id) },
+      include: { signatory: true },
+    });
+    if (!receipt) return res.status(404).send('Reçu introuvable');
+    const settings = await prisma.settings.findUnique({ where: { id: 1 } });
+    const signatory = receipt.signatory || (await prisma.signatory.findFirst({ where: { isDefault: true } }));
+    generateReceiptPdf(res, receipt, settings, signatory);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/recus/:id', async (req, res, next) => {
+  try {
+    await prisma.receipt.delete({ where: { id: Number(req.params.id) } });
+    req.flash('success', 'Reçu supprimé.');
+    res.redirect('/admin/recus');
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ---------- Attestations ----------
+
+router.get('/attestations', async (req, res, next) => {
+  try {
+    const certificates = await prisma.certificate.findMany({ orderBy: { createdAt: 'desc' } });
+    res.render('admin/attestations/list', { title: 'Attestations', certificates });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/attestations/new', async (req, res, next) => {
+  try {
+    const formations = await prisma.formation.findMany({ orderBy: { title: 'asc' } });
+    const signatories = await prisma.signatory.findMany({ orderBy: [{ isDefault: 'desc' }, { fullName: 'asc' }] });
+    res.render('admin/attestations/form', { title: 'Nouvelle attestation', formations, signatories });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/attestations', async (req, res, next) => {
+  try {
+    const { studentName, formationTitle, completionDate, signatoryId } = req.body;
+    const certificateNumber = await nextNumber(prisma.certificate, 'CERT');
+    const certificate = await prisma.certificate.create({
+      data: {
+        certificateNumber,
+        studentName,
+        formationTitle,
+        completionDate: completionDate ? new Date(completionDate) : new Date(),
+        signatoryId: signatoryId ? Number(signatoryId) : null,
+      },
+    });
+    req.flash('success', 'Attestation créée.');
+    res.redirect(`/admin/attestations/${certificate.id}/pdf`);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/attestations/:id/pdf', async (req, res, next) => {
+  try {
+    const certificate = await prisma.certificate.findUnique({
+      where: { id: Number(req.params.id) },
+      include: { signatory: true },
+    });
+    if (!certificate) return res.status(404).send('Attestation introuvable');
+    const settings = await prisma.settings.findUnique({ where: { id: 1 } });
+    const signatory = certificate.signatory || (await prisma.signatory.findFirst({ where: { isDefault: true } }));
+    const verifyUrl = `${req.protocol}://${req.get('host')}/verify/${certificate.certificateNumber}`;
+    await generateCertificatePdf(res, certificate, settings, signatory, verifyUrl);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/attestations/:id', async (req, res, next) => {
+  try {
+    await prisma.certificate.delete({ where: { id: Number(req.params.id) } });
+    req.flash('success', 'Attestation supprimée.');
+    res.redirect('/admin/attestations');
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ---------- Paramètres ----------
 
 router.get('/settings', async (req, res, next) => {
@@ -688,7 +957,7 @@ router.get('/settings', async (req, res, next) => {
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
-router.post('/settings', upload.single('banner'), async (req, res, next) => {
+router.post('/settings', uploadSettings, async (req, res, next) => {
   try {
     const {
       whatsappNumber, siteName, contactEmail,
@@ -698,17 +967,34 @@ router.post('/settings', upload.single('banner'), async (req, res, next) => {
       blogLabel, blogSubheading,
       equipeLabel, equipeSubheading,
       contactHeading, contactSubheading,
+      logoType, logoHighlightWord, logoFontFamily, logoFontSize,
       showFormations, showServices, showBlog, showEquipe,
       showGalerie, showTemoignages, showPartenaires, showAbout,
     } = req.body;
 
     const existing = await prisma.settings.findUnique({ where: { id: 1 } });
+    const bannerFile = req.files && req.files.banner ? req.files.banner[0] : null;
+    const logoFile = req.files && req.files.logo ? req.files.logo[0] : null;
+
+    if (logoFile) {
+      try {
+        await optimizeLogoImage(logoFile.path);
+      } catch (err) {
+        // Le fichier original reste utilisable même si l'optimisation échoue
+        console.error('Échec optimisation du logo :', err.message);
+      }
+    }
 
     const data = {
       whatsappNumber, siteName, contactEmail,
       heroTitle, heroSubtitle, aboutContent,
       primaryColor: HEX_COLOR.test(primaryColor) ? primaryColor : (existing ? existing.primaryColor : '#356DF1'),
-      bannerImageUrl: uploadedPath(req.file) || (existing ? existing.bannerImageUrl : null),
+      bannerImageUrl: uploadedPath(bannerFile) || (existing ? existing.bannerImageUrl : null),
+      logoUrl: uploadedPath(logoFile) || (existing ? existing.logoUrl : null),
+      logoType: logoType === 'image' ? 'image' : 'text',
+      logoHighlightWord: logoHighlightWord || '',
+      logoFontFamily: logoFontFamily === 'serif' ? 'serif' : 'sans',
+      logoFontSize: parseInt(logoFontSize, 10) || 24,
       formationsLabel, formationsLabelSingular, formationsSubheading,
       servicesLabel, servicesLabelSingular, servicesSubheading,
       blogLabel, blogSubheading,

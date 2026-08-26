@@ -1,0 +1,51 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= signatories.length %> signataire(s)</p>
+	<a href="/admin/signataires/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Ajouter un signataire</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>Signature</th>
+			<th>Cachet</th>
+			<th>Nom</th>
+			<th>Titre / Poste</th>
+			<th>Par défaut</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (signatories.length === 0) { %>
+			<tr><td colspan="6" class="hint">Aucun signataire pour le moment. Ajoutez-en un pour pouvoir générer des reçus et attestations.</td></tr>
+		<% } %>
+		<% signatories.forEach(s => { %>
+			<tr>
+				<td>
+					<% if (s.signatureUrl) { %>
+						<img class="thumb" style="object-fit: contain; background: #f5f7fb;" src="<%= s.signatureUrl %>" alt="">
+					<% } else { %>—<% } %>
+				</td>
+				<td>
+					<% if (s.stampUrl) { %>
+						<img class="thumb" style="object-fit: contain; background: #f5f7fb;" src="<%= s.stampUrl %>" alt="">
+					<% } else { %>—<% } %>
+				</td>
+				<td><%= s.fullName %></td>
+				<td><%= s.title %></td>
+				<td><% if (s.isDefault) { %><span class="badge-published">Par défaut</span><% } %></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/admin/signataires/<%= s.id %>/edit" class="admin-btn admin-btn--ghost admin-btn--sm">Modifier</a>
+						<form action="/admin/signataires/<%= s.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer ce signataire ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>

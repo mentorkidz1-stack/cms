@@ -13,8 +13,31 @@
 		</div>
 
 		<div class="field">
-			<label for="quote">Témoignage</label>
+			<label for="quote">Témoignage (texte — toujours affiché, même avec audio/vidéo)</label>
 			<textarea id="quote" name="quote" rows="4" required><%= testimonial ? testimonial.quote : '' %></textarea>
+		</div>
+
+		<div class="field">
+			<label for="mediaType">Format du témoignage</label>
+			<select id="mediaType" name="mediaType">
+				<option value="text" <%= (!testimonial || testimonial.mediaType === 'text') ? 'selected' : '' %>>Texte seul</option>
+				<option value="audio" <%= (testimonial && testimonial.mediaType === 'audio') ? 'selected' : '' %>>Note vocale</option>
+				<option value="video" <%= (testimonial && testimonial.mediaType === 'video') ? 'selected' : '' %>>Vidéo (lien YouTube)</option>
+			</select>
+		</div>
+
+		<div class="field" id="audio-field" style="display: none;">
+			<label for="audioFile">Fichier audio</label>
+			<% if (testimonial && testimonial.mediaType === 'audio' && testimonial.mediaUrl) { %>
+				<audio controls src="<%= testimonial.mediaUrl %>" style="display: block; margin-bottom: 10px; width: 100%;"></audio>
+			<% } %>
+			<input type="file" id="audioFile" name="audioFile" accept="audio/*">
+			<p class="hint">MP3, WAV, OGG ou M4A, 15 Mo max. Laissez vide pour conserver le fichier actuel.</p>
+		</div>
+
+		<div class="field" id="video-field" style="display: none;">
+			<label for="videoUrl">Lien de la vidéo</label>
+			<input type="url" id="videoUrl" name="videoUrl" placeholder="https://youtube.com/watch?v=..." value="<%= testimonial && testimonial.mediaType === 'video' ? testimonial.mediaUrl : '' %>">
 		</div>
 
 		<div class="field">
@@ -47,5 +70,17 @@
 		</div>
 	</form>
 </div>
+
+<script>
+	var mediaTypeSelect = document.getElementById('mediaType');
+	var audioField = document.getElementById('audio-field');
+	var videoField = document.getElementById('video-field');
+	function toggleTestimonialMediaFields() {
+		audioField.style.display = mediaTypeSelect.value === 'audio' ? 'block' : 'none';
+		videoField.style.display = mediaTypeSelect.value === 'video' ? 'block' : 'none';
+	}
+	mediaTypeSelect.addEventListener('change', toggleTestimonialMediaFields);
+	toggleTestimonialMediaFields();
+</script>
 
 <%- include('../_footer') %>

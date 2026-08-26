@@ -10,7 +10,7 @@
 	<link rel="shortcut icon" href="/images/favicon.png">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/assets/css/swiper-bundle.min.css">
 	<link rel="stylesheet" href="/assets/css/nouislider.min.css">
@@ -25,64 +25,58 @@
 
 <body class="mkp-layout">
 
-	<nav class="mkp-navbar navbar navbar-expand-lg pt-15px pb-15px">
+	<%
+		const navItems = [
+			{ href: '/', label: 'Accueil', show: true },
+			{ href: '/formations', label: settings.formationsLabel, show: settings.showFormations },
+			{ href: '/services', label: settings.servicesLabel, show: settings.showServices },
+			{ href: '/galerie', label: 'Galerie', show: settings.showGalerie },
+			{ href: '/blog', label: settings.blogLabel, show: settings.showBlog },
+			{ href: '/temoignages', label: 'Témoignages', show: settings.showTemoignages },
+			{ href: '/equipe', label: settings.equipeLabel, show: settings.showEquipe },
+			{ href: '/about', label: 'À propos', show: settings.showAbout },
+		].filter(item => item.show);
+		const isActiveLink = (href) => (href === '/' ? currentPath === '/' : currentPath.startsWith(href));
+		const waLink = settings.whatsappNumber
+			? `https://wa.me/${settings.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Bonjour ${settings.siteName}, j'aimerais avoir plus d'informations.`)}`
+			: '/contact';
+	%>
+	<nav id="site-navbar" class="mkp-navbar navbar navbar-expand-lg pt-15px pb-15px">
 		<div class="container ctech-nav-row">
 			<div class="ctech-nav-row__logo">
-				<a href="/" class="text-logo fw-bolder text-capitalize"><%= settings.siteName %></a>
+				<%- include('./_logo', { variant: 'nav' }) %>
 			</div>
 			<div class="ctech-nav-row__links">
-				<div class="bars-btn d-lg-none">
-					<span class="iconify fs-24" data-icon="fe:bar"></span>
+				<div class="bars-btn d-lg-none" role="button" aria-label="Ouvrir le menu">
+					<span class="bars-btn__line"></span>
+					<span class="bars-btn__line"></span>
+					<span class="bars-btn__line"></span>
 				</div>
 				<div class="navbar-custom">
 					<ul class="navbar-nav gap-10px">
 						<li class="nav-item navbar-close d-lg-none">
 							<i class="iconify fs-16" data-icon="teenyicons:left-outline"></i>
 						</li>
-						<li class="nav-item">
-							<a href="/" class="d-block pt-25px pb-25px pe-25px transition-all">Accueil</a>
+						<% navItems.forEach(item => { %>
+							<li class="nav-item">
+								<a href="<%= item.href %>" class="nav-link-modern d-block pt-25px pb-25px pe-25px transition-all <%= isActiveLink(item.href) ? 'is-active' : '' %>"><%= item.label %></a>
+							</li>
+						<% }) %>
+						<li class="nav-item d-lg-none mt-20px">
+							<a href="<%= waLink %>" target="_blank" rel="noopener" class="nav-mobile-cta">
+								<i class="iconify fs-20" data-icon="ic:baseline-whatsapp"></i>
+								<span>Nous écrire sur WhatsApp</span>
+							</a>
 						</li>
-						<% if (settings.showFormations) { %>
-							<li class="nav-item">
-								<a href="/formations" class="d-block pt-25px pb-25px pe-25px transition-all"><%= settings.formationsLabel %></a>
-							</li>
-						<% } %>
-						<% if (settings.showServices) { %>
-							<li class="nav-item">
-								<a href="/services" class="d-block pt-25px pb-25px pe-25px transition-all"><%= settings.servicesLabel %></a>
-							</li>
-						<% } %>
-						<% if (settings.showGalerie) { %>
-							<li class="nav-item">
-								<a href="/galerie" class="d-block pt-25px pb-25px pe-25px transition-all">Galerie</a>
-							</li>
-						<% } %>
-						<% if (settings.showBlog) { %>
-							<li class="nav-item">
-								<a href="/blog" class="d-block pt-25px pb-25px pe-25px transition-all"><%= settings.blogLabel %></a>
-							</li>
-						<% } %>
-						<% if (settings.showTemoignages) { %>
-							<li class="nav-item">
-								<a href="/temoignages" class="d-block pt-25px pb-25px pe-25px transition-all">Témoignages</a>
-							</li>
-						<% } %>
-						<% if (settings.showEquipe) { %>
-							<li class="nav-item">
-								<a href="/equipe" class="d-block pt-25px pb-25px pe-25px transition-all"><%= settings.equipeLabel %></a>
-							</li>
-						<% } %>
-						<% if (settings.showAbout) { %>
-							<li class="nav-item">
-								<a href="/about" class="d-block pt-25px pb-25px pe-25px transition-all">À propos</a>
-							</li>
-						<% } %>
 					</ul>
 				</div>
 			</div>
 			<div class="ctech-nav-row__actions">
 				<div class="navbar-act d-flex align-items-center justify-content-end">
-					<a href="/contact" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all">Nous contacter</a>
+					<a href="/contact" class="nav-cta">
+						<i class="iconify fs-16" data-icon="mdi:message-text-outline"></i>
+						<span>Nous contacter</span>
+					</a>
 				</div>
 			</div>
 		</div>

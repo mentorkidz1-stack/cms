@@ -21,6 +21,9 @@ model Formation {
   program     String
   price       Int
   imageUrl    String?
+  sessionDate DateTime?
+  totalSeats  Int?
+  seatsTaken  Int      @default(0)
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -83,6 +86,11 @@ model Settings {
   heroTitle      String @default("Vos données, votre code, votre {{avantage compétitif}}")
   heroSubtitle   String @default("CtechAfrica accompagne les entreprises et les particuliers avec des formations, des services et des solutions en analyse de données, développement informatique et intelligence artificielle.")
   bannerImageUrl String?
+  logoUrl        String?
+  logoType          String  @default("text")
+  logoHighlightWord String  @default("Africa")
+  logoFontFamily    String  @default("sans")
+  logoFontSize      Int     @default(24)
   aboutContent   String @default("<p>CtechAfrica est une entreprise spécialisée en <strong>analyse de données</strong>, <strong>développement informatique</strong> et <strong>intelligence artificielle</strong>. Nous accompagnons les entreprises et les particuliers grâce à des formations pratiques, des services sur mesure et l'expertise de notre équipe.</p><p>Notre mission : rendre la donnée, le code et l'IA accessibles et utiles, avec des solutions concrètes et un accompagnement humain à chaque étape.</p>")
   primaryColor   String @default("#356DF1")
 
@@ -116,6 +124,8 @@ model Testimonial {
   photoUrl   String?
   quote      String
   rating     Int?
+  mediaType  String   @default("text")
+  mediaUrl   String?
   order      Int      @default(0)
   published  Boolean  @default(true)
   createdAt  DateTime @default(now())
@@ -143,4 +153,43 @@ model GalleryItem {
   published Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Receipt {
+  id            Int        @id @default(autoincrement())
+  receiptNumber String     @unique
+  clientName    String
+  clientPhone   String?
+  itemLabel     String
+  amount        Int
+  paymentMethod String?
+  paymentDate   DateTime   @default(now())
+  notes         String?
+  signatoryId   Int?
+  signatory     Signatory? @relation(fields: [signatoryId], references: [id])
+  createdAt     DateTime   @default(now())
+}
+
+model Certificate {
+  id                Int        @id @default(autoincrement())
+  certificateNumber String     @unique
+  studentName       String
+  formationTitle    String
+  completionDate    DateTime   @default(now())
+  signatoryId       Int?
+  signatory         Signatory? @relation(fields: [signatoryId], references: [id])
+  createdAt         DateTime   @default(now())
+}
+
+model Signatory {
+  id           Int           @id @default(autoincrement())
+  fullName     String
+  title        String
+  signatureUrl String?
+  stampUrl     String?
+  isDefault    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  receipts     Receipt[]
+  certificates Certificate[]
 }

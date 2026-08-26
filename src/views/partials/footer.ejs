@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-12 col-lg-4 mb-30px mb-lg-0">
-				<a href="/" class="section-footer_logo-text d-block mb-20px"><%= settings.siteName %></a>
+				<div class="d-block mb-20px"><%- include('./_logo', { variant: 'footer' }) %></div>
 				<p class="mb-20px"><%= settings.siteName %> — Analyse de données, développement informatique et intelligence artificielle.</p>
 				<a href="/contact" class="btn button-type-01 fw-semibold d-inline-block border-radius-10px text-capitalize transition-all">Nous contacter</a>
 			</div>
@@ -62,6 +62,7 @@
 <script type="text/javascript" src="/assets/js/swiper-control.js?v=5.6" defer></script>
 <script type="text/javascript" src="/assets/js/main.js?v=5.6" defer></script>
 <script type="text/javascript" src="/assets/js/wow.min.js" defer></script>
+<script type="text/javascript" src="/assets/js/nav-scroll.js" defer></script>
 </body>
 
 </html>

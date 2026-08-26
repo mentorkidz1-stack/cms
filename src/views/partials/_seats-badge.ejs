@@ -1,0 +1,29 @@
+<%
+  const hasSeats = typeof formation.totalSeats === 'number' && formation.totalSeats > 0;
+  const remaining = hasSeats ? Math.max(formation.totalSeats - formation.seatsTaken, 0) : null;
+  const isFull = hasSeats && remaining <= 0;
+  const isUrgent = hasSeats && !isFull && remaining <= 5;
+  const daysUntil = formation.sessionDate
+    ? Math.ceil((new Date(formation.sessionDate) - new Date()) / (1000 * 60 * 60 * 24))
+    : null;
+%>
+<% if (hasSeats || formation.sessionDate) { %>
+	<div class="seats-badge-row">
+		<% if (formation.sessionDate) { %>
+			<span class="seats-badge seats-badge--date">
+				<i class="iconify fs-14" data-icon="mdi:calendar-outline"></i>
+				<%= new Date(formation.sessionDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+				<% if (daysUntil !== null && daysUntil > 0) { %> · dans <%= daysUntil %> j<% } %>
+			</span>
+		<% } %>
+		<% if (hasSeats) { %>
+			<% if (isFull) { %>
+				<span class="seats-badge seats-badge--full">Complet</span>
+			<% } else if (isUrgent) { %>
+				<span class="seats-badge seats-badge--urgent">Plus que <%= remaining %> place<%= remaining > 1 ? 's' : '' %> !</span>
+			<% } else { %>
+				<span class="seats-badge seats-badge--ok"><%= remaining %> places disponibles</span>
+			<% } %>
+		<% } %>
+	</div>
+<% } %>

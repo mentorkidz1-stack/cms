@@ -7,6 +7,26 @@
 		</div>
 	<% } %>
 	<p class="testimonial-card__quote fs-15">« <%= testimonial.quote %> »</p>
+
+	<% if (testimonial.mediaType === 'audio' && testimonial.mediaUrl) { %>
+		<div class="testimonial-card__media">
+			<audio controls preload="none" src="<%= testimonial.mediaUrl %>" style="width: 100%;"></audio>
+		</div>
+	<% } else if (testimonial.mediaType === 'video' && testimonial.mediaUrl) { %>
+		<% const embedUrl = youtubeEmbedUrl(testimonial.mediaUrl); %>
+		<div class="testimonial-card__media">
+			<% if (embedUrl) { %>
+				<div class="testimonial-card__video-embed">
+					<iframe src="<%= embedUrl %>" title="Témoignage vidéo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+				</div>
+			<% } else { %>
+				<a href="<%= testimonial.mediaUrl %>" target="_blank" rel="noopener" class="fs-14 fw-semibold" style="color: var(--regal-blue);">
+					<i class="iconify fs-16" data-icon="mdi:play-circle-outline"></i> Voir la vidéo
+				</a>
+			<% } %>
+		</div>
+	<% } %>
+
 	<div class="testimonial-card__author">
 		<img src="<%= testimonial.photoUrl || '/images/avatar/user.png' %>" alt="<%= testimonial.authorName %>">
 		<div>

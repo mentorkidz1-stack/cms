@@ -25,6 +25,28 @@
 			<input type="hidden" name="program" id="program-input">
 		</div>
 
+		<hr class="my-25px">
+		<h3 class="mb-15px">Session (optionnel)</h3>
+		<p class="hint mb-15px">Renseignez ces champs pour afficher une date de session et un compteur de places restantes sur la fiche.</p>
+
+		<div class="field">
+			<label for="sessionDate">Date de la session</label>
+			<input type="date" id="sessionDate" name="sessionDate" value="<%= formation && formation.sessionDate ? new Date(formation.sessionDate).toISOString().slice(0, 10) : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="totalSeats">Nombre total de places</label>
+			<input type="number" id="totalSeats" name="totalSeats" min="0" value="<%= formation && formation.totalSeats ? formation.totalSeats : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="seatsTaken">Places déjà prises</label>
+			<input type="number" id="seatsTaken" name="seatsTaken" min="0" value="<%= formation ? formation.seatsTaken : 0 %>">
+			<p class="hint">À mettre à jour vous-même au fur et à mesure des inscriptions confirmées par WhatsApp.</p>
+		</div>
+
+		<hr class="my-25px">
+
 		<div class="field">
 			<label for="image">Image</label>
 			<% if (formation && formation.imageUrl) { %>

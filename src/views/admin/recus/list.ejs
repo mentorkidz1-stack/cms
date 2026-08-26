@@ -1,0 +1,43 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= receipts.length %> reçu(s)</p>
+	<a href="/admin/recus/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Nouveau reçu</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>N°</th>
+			<th>Client</th>
+			<th>Description</th>
+			<th>Montant</th>
+			<th>Date</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (receipts.length === 0) { %>
+			<tr><td colspan="6" class="hint">Aucun reçu pour le moment.</td></tr>
+		<% } %>
+		<% receipts.forEach(r => { %>
+			<tr>
+				<td><%= r.receiptNumber %></td>
+				<td><%= r.clientName %></td>
+				<td><%= r.itemLabel %></td>
+				<td><%= r.amount.toLocaleString('fr-FR') %> FCFA</td>
+				<td><%= new Date(r.paymentDate).toLocaleDateString('fr-FR') %></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/admin/recus/<%= r.id %>/pdf" target="_blank" class="admin-btn admin-btn--ghost admin-btn--sm">Voir le PDF</a>
+						<form action="/admin/recus/<%= r.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer ce reçu ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>

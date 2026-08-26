@@ -1,0 +1,41 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= certificates.length %> attestation(s)</p>
+	<a href="/admin/attestations/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Nouvelle attestation</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>N°</th>
+			<th>Étudiant(e)</th>
+			<th>Formation</th>
+			<th>Date</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (certificates.length === 0) { %>
+			<tr><td colspan="5" class="hint">Aucune attestation pour le moment.</td></tr>
+		<% } %>
+		<% certificates.forEach(c => { %>
+			<tr>
+				<td><%= c.certificateNumber %></td>
+				<td><%= c.studentName %></td>
+				<td><%= c.formationTitle %></td>
+				<td><%= new Date(c.completionDate).toLocaleDateString('fr-FR') %></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/admin/attestations/<%= c.id %>/pdf" target="_blank" class="admin-btn admin-btn--ghost admin-btn--sm">Voir le PDF</a>
+						<form action="/admin/attestations/<%= c.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer cette attestation ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>

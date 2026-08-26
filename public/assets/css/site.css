@@ -1,28 +1,71 @@
 /* Surcharges spécifiques CtechAfrica (n'altère pas les fichiers du template Eduma) */
 
-.text-logo {
-  display: inline-block;
-  font-size: 24px;
-  line-height: 1;
-  color: var(--regal-black, #212427);
+/* ===== Logo hybride (image ou texte, au choix dans l'admin) ===== */
+.site-logo {
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
+}
+
+.site-logo--image img {
+  height: 44px;
+  max-height: 44px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+@media (min-width: 768px) {
+  .site-logo--image img {
+    height: 52px;
+    max-height: 52px;
+  }
+}
+
+.site-logo--text {
+  font-weight: 700;
+  line-height: 1;
   white-space: nowrap;
+  text-transform: capitalize;
+}
+.site-logo--text.font-sans {
+  font-family: 'Poppins', 'Inter', sans-serif;
+}
+.site-logo--text.font-serif {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+}
+/* Nav (fond clair, verre dépoli) et footer (fond gris très clair) partagent
+   le même texte foncé — un logo blanc y serait quasiment invisible. */
+.site-logo--text.site-logo--nav,
+.site-logo--text.site-logo--footer {
+  color: var(--regal-black, #212427);
+}
+.site-logo--text:hover {
+  color: var(--regal-black, #212427);
 }
 
-.text-logo:hover {
-  color: var(--regal-blue, #356DF1);
-}
-
-/* Le template positionne .mkp-navbar en absolute sous le bandeau .mkp-head
-   (logo + recherche) qu'on n'utilise pas sur ce site : sans lui, la nav
-   flotterait par-dessus le hero. On la remet dans le flux normal et on
-   pilote sa mise en page nous-même avec un flex row dédié. */
+/* ===== Navbar haut de gamme =====
+   Le template positionne .mkp-navbar en absolute sous le bandeau .mkp-head
+   (logo + recherche) qu'on n'utilise pas sur ce site. On la remet dans le
+   flux normal en sticky, avec un effet verre dépoli, et on pilote sa mise
+   en page nous-même avec un flex row dédié. */
 .mkp-navbar {
-  position: relative !important;
-  top: auto !important;
+  position: sticky !important;
+  top: 0 !important;
   right: auto !important;
-  background-color: #fff;
-  z-index: 20;
+  z-index: 1030;
+  background-color: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  transition: padding 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.mkp-navbar.nav-scrolled {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  background-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 24px rgba(20, 24, 33, 0.08);
 }
 
 .ctech-nav-row {
@@ -48,11 +91,154 @@
   flex: 0 0 auto;
 }
 
+@media (min-width: 1024px) {
+  .ctech-nav-row__links {
+    justify-content: center;
+  }
+}
+
+/* Mobile : .navbar-custom est en position fixed hors-flux tant qu'il n'est
+   pas ouvert, donc le seul enfant visible de .ctech-nav-row__links est le
+   bouton hamburger — sans ceci il reste collé au logo au lieu d'aller au
+   bord droit du conteneur (flex + justify-content gère l'espacement). */
+@media (max-width: 1023.98px) {
+  .ctech-nav-row__links {
+    justify-content: flex-end;
+  }
+}
+
+/* Liens : effet de survol avec petite barre animée (desktop uniquement —
+   les liens y ont une largeur naturelle liée au texte) */
+.nav-link-modern {
+  position: relative;
+  color: var(--regal-black, #212427);
+}
+.nav-link-modern::after {
+  content: '';
+  position: absolute;
+  left: 25px;
+  right: 25px;
+  bottom: 14px;
+  height: 2px;
+  background-color: var(--regal-blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.nav-link-modern:hover {
+  color: var(--regal-blue);
+}
+.nav-link-modern:hover::after {
+  transform: scaleX(1);
+}
+.nav-link-modern.is-active {
+  color: var(--regal-blue);
+  font-weight: 600;
+}
+.nav-link-modern.is-active::after {
+  transform: scaleX(1);
+}
+
+/* Menu mobile : les liens y sont des blocs pleine largeur (tiroir à largeur
+   fixe) — un soulignement façon "barre étirée" y est disproportionné. On le
+   désactive et on indique l'élément actif avec une bordure gauche + un fond
+   teinté, plus adapté à une liste verticale. */
+@media (max-width: 1023.98px) {
+  .nav-link-modern::after {
+    content: none;
+  }
+  .nav-link-modern {
+    border-left: 3px solid transparent;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .nav-link-modern:hover {
+    background-color: color-mix(in srgb, var(--regal-blue) 8%, transparent);
+  }
+  .nav-link-modern.is-active {
+    border-left-color: var(--regal-blue);
+    background-color: color-mix(in srgb, var(--regal-blue) 10%, transparent);
+  }
+}
+
+/* CTA principal : dégradé, icône, effet au survol */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--regal-blue), color-mix(in srgb, var(--regal-blue) 65%, #000));
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--regal-blue) 35%, transparent);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.nav-cta:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--regal-blue) 45%, transparent);
+}
+
+/* Hamburger 3 traits animé en croix */
+.bars-btn {
+  width: 26px;
+  height: 18px;
+  position: relative;
+  cursor: pointer;
+}
+.bars-btn__line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--regal-black, #212427);
+  transition: transform 0.3s ease, opacity 0.2s ease, top 0.3s ease;
+}
+.bars-btn__line:nth-child(1) { top: 0; }
+.bars-btn__line:nth-child(2) { top: 8px; }
+.bars-btn__line:nth-child(3) { top: 16px; }
+body.set-bars-overlay .bars-btn__line:nth-child(1) {
+  top: 8px;
+  transform: rotate(45deg);
+}
+body.set-bars-overlay .bars-btn__line:nth-child(2) {
+  opacity: 0;
+}
+body.set-bars-overlay .bars-btn__line:nth-child(3) {
+  top: 8px;
+  transform: rotate(-45deg);
+}
+
+/* Flou renforcé derrière le menu mobile déployé (le fond/le scroll-lock viennent du template) */
+body.set-bars-overlay::before {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* CTA WhatsApp bien visible dans le menu mobile déployé */
+.nav-mobile-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 20px;
+  padding: 13px 18px;
+  border-radius: 10px;
+  background-color: #25d366;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
 @media (max-width: 991.98px) {
-  .ctech-nav-row__actions .button-type-01 {
-    padding-left: 15px;
-    padding-right: 15px;
-    font-size: 13px;
+  .ctech-nav-row__actions {
+    display: none;
   }
 }
 
@@ -60,19 +246,6 @@
   .text-logo {
     font-size: 19px;
   }
-  .ctech-nav-row__actions .button-type-01 {
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 12px;
-  }
-}
-
-.section-footer_logo-text {
-  display: inline-block;
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-  text-decoration: none;
 }
 
 .wa-float-btn {
@@ -227,21 +400,24 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 30px 40px;
+  gap: 20px 30px;
 }
 .partner-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60px;
-  width: 130px;
-  filter: grayscale(100%);
-  opacity: 0.75;
-  transition: all 0.2s ease;
+  height: 90px;
+  width: 170px;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: #fff;
+  border: 1px solid #eef0f3;
+  box-shadow: 0 2px 10px rgba(20, 24, 33, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .partner-logo:hover {
-  filter: grayscale(0%);
-  opacity: 1;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(20, 24, 33, 0.08);
 }
 .partner-logo img {
   max-width: 100%;
@@ -269,4 +445,66 @@ html, body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Places / dates de session */
+.seats-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.seats-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.seats-badge--date {
+  background-color: #f0f2f7;
+  color: #444;
+}
+.seats-badge--ok {
+  background-color: #e6f7ec;
+  color: #1e8a4c;
+}
+.seats-badge--urgent {
+  background-color: #fdece9;
+  color: #d94f3d;
+  animation: pulse-urgent 1.8s ease-in-out infinite;
+}
+.seats-badge--full {
+  background-color: #eee;
+  color: #777;
+}
+@keyframes pulse-urgent {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Témoignages audio / vidéo */
+.testimonial-card__media {
+  margin-bottom: 18px;
+}
+.testimonial-card__video-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+.testimonial-card__video-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.testimonial-card__media audio {
+  border-radius: 30px;
 }

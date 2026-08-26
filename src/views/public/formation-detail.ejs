@@ -14,11 +14,13 @@
 			</div>
 			<div class="col-lg-4">
 				<div class="border-radius-10px p-25px" style="border: 1px solid #eee; position: sticky; top: 20px;">
-					<p class="price-tag mb-20px"><%= formation.price.toLocaleString('fr-FR') %> FCFA</p>
+					<%- include('../partials/_seats-badge', { formation }) %>
+					<p class="price-tag mb-20px mt-10px"><%= formation.price.toLocaleString('fr-FR') %> FCFA</p>
+					<% const isFull = formation.totalSeats && (formation.totalSeats - formation.seatsTaken) <= 0; %>
 					<% if (whatsappLink) { %>
 						<a href="<%= whatsappLink %>" target="_blank" rel="noopener" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all d-flex align-items-center justify-content-center gap-10px w-100">
 							<i class="iconify fs-20" data-icon="ic:baseline-whatsapp"></i>
-							<span>S'inscrire via WhatsApp</span>
+							<span><%= isFull ? "Rejoindre la liste d'attente" : "S'inscrire via WhatsApp" %></span>
 						</a>
 					<% } else { %>
 						<a href="/contact" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all d-flex align-items-center justify-content-center gap-10px w-100">

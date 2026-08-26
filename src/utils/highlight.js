@@ -13,4 +13,20 @@ function renderHighlighted(text) {
   return escaped.replace(/\{\{(.+?)\}\}/g, '<span class="hl-style">$1</span>');
 }
 
-module.exports = { renderHighlighted };
+// Logo texte : colore la première occurrence de `highlightWord` dans le nom
+// du site (ex: "Africa" dans "CtechAfrica"), sans toucher au nom brut utilisé
+// ailleurs (titre de page, meta description, PDF...).
+function renderLogoText(siteName, highlightWord) {
+  const escaped = escapeHtml(siteName);
+  if (!highlightWord) return escaped;
+  const escapedWord = escapeHtml(highlightWord);
+  const idx = escaped.toLowerCase().indexOf(escapedWord.toLowerCase());
+  if (idx === -1) return escaped;
+  return (
+    escaped.slice(0, idx) +
+    `<span class="hl-style">${escaped.slice(idx, idx + escapedWord.length)}</span>` +
+    escaped.slice(idx + escapedWord.length)
+  );
+}
+
+module.exports = { renderHighlighted, renderLogoText };

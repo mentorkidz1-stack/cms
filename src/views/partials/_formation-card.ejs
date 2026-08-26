@@ -14,6 +14,7 @@
 			<a href="/formations/<%= formation.slug %>" class="transition-all line-clamp-2"><%= formation.title %></a>
 		</h4>
 		<p class="courses-layout-2__items__brief fs-14 line-clamp-2 mb-12px"><%= formation.description %></p>
+		<%- include('./_seats-badge', { formation }) %>
 		<div class="courses-layout-2__items__value d-flex align-items-center gap-10px mb-10px">
 			<p class="courses-layout-2__items__price fs-18 fw-semibold mb-0"><%= formation.price.toLocaleString('fr-FR') %> FCFA</p>
 		</div>

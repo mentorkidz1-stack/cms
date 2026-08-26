@@ -1,0 +1,15 @@
+<% /* Attend un local `variant` : 'nav' ou 'footer' (contrôle la couleur du logo texte). Fallback propre si logoType="image" mais aucun fichier n'est encore configuré. */ %>
+<% const logoVariant = typeof variant !== 'undefined' ? variant : 'nav'; %>
+<% if (settings.logoType === 'image' && settings.logoUrl) { %>
+	<a href="/" class="site-logo site-logo--image">
+		<img src="<%= settings.logoUrl %>" alt="<%= settings.siteName %>"
+			onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+		<span class="site-logo--text site-logo--<%= logoVariant %> font-<%= settings.logoFontFamily %>" style="font-size: <%= settings.logoFontSize %>px; display: none;">
+			<%- renderLogoText(settings.siteName, settings.logoHighlightWord) %>
+		</span>
+	</a>
+<% } else { %>
+	<a href="/" class="site-logo site-logo--text site-logo--<%= logoVariant %> font-<%= settings.logoFontFamily %>" style="font-size: <%= settings.logoFontSize %>px;">
+		<%- renderLogoText(settings.siteName, settings.logoHighlightWord) %>
+	</a>
+<% } %>

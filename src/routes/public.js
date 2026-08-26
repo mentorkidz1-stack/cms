@@ -209,4 +209,15 @@ router.get('/temoignages', async (req, res, next) => {
   }
 });
 
+router.get('/verify/:certificateNumber', async (req, res, next) => {
+  try {
+    const certificate = await prisma.certificate.findUnique({
+      where: { certificateNumber: req.params.certificateNumber },
+    });
+    res.render('public/verify', { title: 'Vérification d\'attestation', certificate });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

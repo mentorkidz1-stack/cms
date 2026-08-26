@@ -7,7 +7,8 @@ const methodOverride = require('method-override');
 
 const prisma = require('./db');
 const { stripHtml } = require('./utils/html');
-const { renderHighlighted } = require('./utils/highlight');
+const { renderHighlighted, renderLogoText } = require('./utils/highlight');
+const { youtubeEmbedUrl } = require('./utils/video');
 const publicRoutes = require('./routes/public');
 const adminRoutes = require('./routes/admin');
 
@@ -17,6 +18,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.locals.stripHtml = stripHtml;
 app.locals.renderHighlighted = renderHighlighted;
+app.locals.renderLogoText = renderLogoText;
+app.locals.youtubeEmbedUrl = youtubeEmbedUrl;
 
 app.use(
   helmet({

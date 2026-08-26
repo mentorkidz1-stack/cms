@@ -1,0 +1,56 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-card">
+	<form class="admin-form" action="/admin/attestations" method="POST">
+		<div class="field">
+			<label for="linkedFormation">Formation (optionnel — pré-remplit le titre)</label>
+			<select id="linkedFormation">
+				<option value="">— Choisir —</option>
+				<% formations.forEach(f => { %>
+					<option value="<%= f.title %>"><%= f.title %></option>
+				<% }) %>
+			</select>
+		</div>
+
+		<div class="field">
+			<label for="studentName">Nom de l'étudiant(e)</label>
+			<input type="text" id="studentName" name="studentName" required>
+		</div>
+
+		<div class="field">
+			<label for="formationTitle">Titre de la formation</label>
+			<input type="text" id="formationTitle" name="formationTitle" required>
+		</div>
+
+		<div class="field">
+			<label for="completionDate">Date de fin de formation</label>
+			<input type="date" id="completionDate" name="completionDate" value="<%= new Date().toISOString().slice(0, 10) %>">
+		</div>
+
+		<div class="field">
+			<label for="signatoryId">Signataire</label>
+			<% if (signatories.length === 0) { %>
+				<p class="hint">Aucun signataire enregistré — <a href="/admin/signataires/new">en ajouter un</a>. Sans signataire, "Le Fondateur" sera affiché par défaut.</p>
+			<% } else { %>
+				<select id="signatoryId" name="signatoryId">
+					<% signatories.forEach(s => { %>
+						<option value="<%= s.id %>" <%= s.isDefault ? 'selected' : '' %>><%= s.fullName %> — <%= s.title %></option>
+					<% }) %>
+				</select>
+			<% } %>
+		</div>
+
+		<div class="d-flex gap-10px">
+			<button type="submit" class="admin-btn">Générer l'attestation PDF</button>
+			<a href="/admin/attestations" class="admin-btn admin-btn--ghost">Annuler</a>
+		</div>
+	</form>
+</div>
+
+<script>
+	document.getElementById('linkedFormation').addEventListener('change', function () {
+		if (this.value) document.getElementById('formationTitle').value = this.value;
+	});
+</script>
+
+<%- include('../_footer') %>

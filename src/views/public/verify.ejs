@@ -1,0 +1,36 @@
+<%- include('../partials/header', { title }) %>
+
+<section class="pt-80px pb-100px">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-6 text-center">
+				<% if (certificate) { %>
+					<div class="mb-20px" style="width: 70px; height: 70px; border-radius: 50%; background-color: #e6f7ec; display: flex; align-items: center; justify-content: center; margin-left: auto; margin-right: auto;">
+						<i class="iconify fs-32" data-icon="mdi:check-decagram" style="color: #1e8a4c;"></i>
+					</div>
+					<h1 class="fs-26 fw-bolder mb-15px">Attestation authentique</h1>
+					<p class="fs-15 mb-30px" style="opacity: 0.7;">Ce certificat a bien été délivré par <%= settings.siteName %>.</p>
+					<div class="border-radius-10px p-25px text-start" style="border: 1px solid #eee;">
+						<p class="fs-13 mb-5px" style="opacity: 0.6;">N° de certificat</p>
+						<p class="fs-16 fw-semibold mb-20px"><%= certificate.certificateNumber %></p>
+						<p class="fs-13 mb-5px" style="opacity: 0.6;">Décerné à</p>
+						<p class="fs-16 fw-semibold mb-20px"><%= certificate.studentName %></p>
+						<p class="fs-13 mb-5px" style="opacity: 0.6;">Formation</p>
+						<p class="fs-16 fw-semibold mb-20px"><%= certificate.formationTitle %></p>
+						<p class="fs-13 mb-5px" style="opacity: 0.6;">Date de délivrance</p>
+						<p class="fs-16 fw-semibold mb-0"><%= new Date(certificate.completionDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) %></p>
+					</div>
+				<% } else { %>
+					<div class="mb-20px" style="width: 70px; height: 70px; border-radius: 50%; background-color: #fdece9; display: flex; align-items: center; justify-content: center; margin-left: auto; margin-right: auto;">
+						<i class="iconify fs-32" data-icon="mdi:close-circle-outline" style="color: #d94f3d;"></i>
+					</div>
+					<h1 class="fs-26 fw-bolder mb-15px">Certificat introuvable</h1>
+					<p class="fs-15" style="opacity: 0.7;">Aucune attestation ne correspond à ce numéro. Vérifiez le lien ou contactez-nous.</p>
+					<a href="/contact" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all mt-20px d-inline-block">Nous contacter</a>
+				<% } %>
+			</div>
+		</div>
+	</div>
+</section>
+
+<%- include('../partials/footer') %>

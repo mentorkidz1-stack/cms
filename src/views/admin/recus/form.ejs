@@ -1,0 +1,90 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-card">
+	<form class="admin-form" action="/admin/recus" method="POST">
+		<div class="field">
+			<label for="linkedItem">Lier à une formation/un service (optionnel — pré-remplit la description et le montant)</label>
+			<select id="linkedItem">
+				<option value="">— Aucun —</option>
+				<% formations.forEach(f => { %>
+					<option value="<%= f.title %>" data-price="<%= f.price %>"><%= f.title %> (Formation)</option>
+				<% }) %>
+				<% services.forEach(s => { %>
+					<option value="<%= s.title %>" data-price="<%= s.price || '' %>"><%= s.title %> (Service)</option>
+				<% }) %>
+			</select>
+		</div>
+
+		<div class="field">
+			<label for="clientName">Nom du client</label>
+			<input type="text" id="clientName" name="clientName" required>
+		</div>
+
+		<div class="field">
+			<label for="clientPhone">Téléphone (optionnel)</label>
+			<input type="text" id="clientPhone" name="clientPhone">
+		</div>
+
+		<div class="field">
+			<label for="itemLabel">Description</label>
+			<input type="text" id="itemLabel" name="itemLabel" required placeholder="Ex: Formation Développement Web Full-Stack">
+		</div>
+
+		<div class="field">
+			<label for="amount">Montant (FCFA)</label>
+			<input type="number" id="amount" name="amount" required min="0">
+		</div>
+
+		<div class="field">
+			<label for="paymentMethod">Mode de paiement</label>
+			<select id="paymentMethod" name="paymentMethod">
+				<option value="Mobile Money">Mobile Money</option>
+				<option value="Orange Money">Orange Money</option>
+				<option value="MTN Mobile Money">MTN Mobile Money</option>
+				<option value="Virement bancaire">Virement bancaire</option>
+				<option value="Espèces">Espèces</option>
+				<option value="Autre">Autre</option>
+			</select>
+		</div>
+
+		<div class="field">
+			<label for="paymentDate">Date du paiement</label>
+			<input type="date" id="paymentDate" name="paymentDate" value="<%= new Date().toISOString().slice(0, 10) %>">
+		</div>
+
+		<div class="field">
+			<label for="notes">Note (optionnelle)</label>
+			<textarea id="notes" name="notes" rows="2"></textarea>
+		</div>
+
+		<div class="field">
+			<label for="signatoryId">Signataire</label>
+			<% if (signatories.length === 0) { %>
+				<p class="hint">Aucun signataire enregistré — <a href="/admin/signataires/new">en ajouter un</a>. Sans signataire, "Le Fondateur" sera affiché par défaut.</p>
+			<% } else { %>
+				<select id="signatoryId" name="signatoryId">
+					<% signatories.forEach(s => { %>
+						<option value="<%= s.id %>" <%= s.isDefault ? 'selected' : '' %>><%= s.fullName %> — <%= s.title %></option>
+					<% }) %>
+				</select>
+			<% } %>
+		</div>
+
+		<div class="d-flex gap-10px">
+			<button type="submit" class="admin-btn">Générer le reçu PDF</button>
+			<a href="/admin/recus" class="admin-btn admin-btn--ghost">Annuler</a>
+		</div>
+	</form>
+</div>
+
+<script>
+	var linkedItem = document.getElementById('linkedItem');
+	linkedItem.addEventListener('change', function () {
+		var opt = this.options[this.selectedIndex];
+		if (!opt.value) return;
+		document.getElementById('itemLabel').value = opt.value;
+		if (opt.dataset.price) document.getElementById('amount').value = opt.dataset.price;
+	});
+</script>
+
+<%- include('../_footer') %>

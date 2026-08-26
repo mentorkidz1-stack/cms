@@ -1,0 +1,45 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-card">
+	<form class="admin-form" action="<%= signatory ? `/admin/signataires/${signatory.id}?_method=PUT` : '/admin/signataires' %>" method="POST" enctype="multipart/form-data">
+		<div class="field">
+			<label for="fullName">Nom complet</label>
+			<input type="text" id="fullName" name="fullName" required placeholder="Ex: Dr. Marc KPOFFON" value="<%= signatory ? signatory.fullName : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="title">Titre / Poste</label>
+			<input type="text" id="title" name="title" required placeholder="Ex: Fondateur &amp; Formateur Principal" value="<%= signatory ? signatory.title : '' %>">
+		</div>
+
+		<div class="field">
+			<label for="signature">Signature numérisée</label>
+			<% if (signatory && signatory.signatureUrl) { %>
+				<img class="current-image" style="object-fit: contain; background: #f5f7fb;" src="<%= signatory.signatureUrl %>" alt="">
+			<% } %>
+			<input type="file" id="signature" name="signature" accept="image/*">
+			<p class="hint">PNG avec fond transparent conseillé. Laissez vide pour conserver le fichier actuel.</p>
+		</div>
+
+		<div class="field">
+			<label for="stamp">Cachet / tampon officiel</label>
+			<% if (signatory && signatory.stampUrl) { %>
+				<img class="current-image" style="object-fit: contain; background: #f5f7fb;" src="<%= signatory.stampUrl %>" alt="">
+			<% } %>
+			<input type="file" id="stamp" name="stamp" accept="image/*">
+			<p class="hint">PNG avec fond transparent conseillé. Sans cachet, un sceau "Officiel / Certifié" par défaut sera utilisé sur les attestations.</p>
+		</div>
+
+		<div class="field checkbox-field">
+			<input type="checkbox" id="isDefault" name="isDefault" <%= (signatory && signatory.isDefault) ? 'checked' : '' %>>
+			<label for="isDefault" style="margin-bottom: 0;">Signataire par défaut (pré-sélectionné à la génération des reçus/attestations)</label>
+		</div>
+
+		<div class="d-flex gap-10px">
+			<button type="submit" class="admin-btn"><%= signatory ? 'Enregistrer' : 'Ajouter le signataire' %></button>
+			<a href="/admin/signataires" class="admin-btn admin-btn--ghost">Annuler</a>
+		</div>
+	</form>
+</div>
+
+<%- include('../_footer') %>
