@@ -1,3 +1,6 @@
+const path = require('path');
+const fs = require('fs');
+const crypto = require('crypto');
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const rateLimit = require('express-rate-limit');
@@ -22,6 +25,18 @@ const loginLimiter = rateLimit({
 
 function uploadedPath(file) {
   return file ? `/uploads/${file.filename}` : undefined;
+}
+
+const UPLOAD_DIR = path.join(__dirname, '..', '..', 'public', 'uploads');
+
+// Décode une signature dessinée à la main (canvas.toDataURL) et l'enregistre
+// comme un fichier PNG classique dans /uploads, au même titre qu'un upload.
+function saveSignatureDataUrl(dataUrl) {
+  if (!dataUrl || !dataUrl.startsWith('data:image/png;base64,')) return null;
+  const base64 = dataUrl.replace(/^data:image\/png;base64,/, '');
+  const filename = `sig-${Date.now()}-${crypto.randomBytes(6).toString('hex')}.png`;
+  fs.writeFileSync(path.join(UPLOAD_DIR, filename), Buffer.from(base64, 'base64'));
+  return `/uploads/${filename}`;
 }
 
 // ---------- Auth ----------
@@ -78,6 +93,45 @@ router.get('/', async (req, res, next) => {
         partners: partnersCount,
       },
     });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ---------- Mon compte ----------
+
+router.get('/mon-compte', async (req, res, next) => {
+  try {
+    const admin = await prisma.admin.findUnique({ where: { id: req.session.adminId } });
+    res.render('admin/account', { title: 'Mon compte', adminEmail: admin.email });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/mon-compte/mot-de-passe', async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const admin = await prisma.admin.findUnique({ where: { id: req.session.adminId } });
+
+    const valid = await bcrypt.compare(currentPassword || '', admin.passwordHash);
+    if (!valid) {
+      req.flash('error', 'Mot de passe actuel incorrect.');
+      return res.redirect('/admin/mon-compte');
+    }
+    if (!newPassword || newPassword.length < 8) {
+      req.flash('error', 'Le nouveau mot de passe doit contenir au moins 8 caractères.');
+      return res.redirect('/admin/mon-compte');
+    }
+    if (newPassword !== confirmPassword) {
+      req.flash('error', 'La confirmation ne correspond pas au nouveau mot de passe.');
+      return res.redirect('/admin/mon-compte');
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    await prisma.admin.update({ where: { id: admin.id }, data: { passwordHash } });
+    req.flash('success', 'Mot de passe mis à jour.');
+    res.redirect('/admin/mon-compte');
   } catch (err) {
     next(err);
   }
@@ -731,7 +785,7 @@ async function setSingleDefault(newDefaultId) {
 
 router.post('/signataires', uploadSignatory, async (req, res, next) => {
   try {
-    const { fullName, title, isDefault } = req.body;
+    const { fullName, title, isDefault, signatureDataUrl } = req.body;
     const signatureFile = req.files && req.files.signature ? req.files.signature[0] : null;
     const stampFile = req.files && req.files.stamp ? req.files.stamp[0] : null;
 
@@ -740,7 +794,7 @@ router.post('/signataires', uploadSignatory, async (req, res, next) => {
       data: {
         fullName,
         title,
-        signatureUrl: uploadedPath(signatureFile),
+        signatureUrl: saveSignatureDataUrl(signatureDataUrl) || uploadedPath(signatureFile),
         stampUrl: uploadedPath(stampFile),
         isDefault: count === 0 ? true : isDefault === 'on',
       },
@@ -766,7 +820,7 @@ router.get('/signataires/:id/edit', async (req, res, next) => {
 router.put('/signataires/:id', uploadSignatory, async (req, res, next) => {
   try {
     const id = Number(req.params.id);
-    const { fullName, title, isDefault } = req.body;
+    const { fullName, title, isDefault, signatureDataUrl } = req.body;
     const existing = await prisma.signatory.findUnique({ where: { id } });
     if (!existing) return res.status(404).send('Signataire introuvable');
     const signatureFile = req.files && req.files.signature ? req.files.signature[0] : null;
@@ -777,7 +831,7 @@ router.put('/signataires/:id', uploadSignatory, async (req, res, next) => {
       data: {
         fullName,
         title,
-        signatureUrl: uploadedPath(signatureFile) || existing.signatureUrl,
+        signatureUrl: saveSignatureDataUrl(signatureDataUrl) || uploadedPath(signatureFile) || existing.signatureUrl,
         stampUrl: uploadedPath(stampFile) || existing.stampUrl,
         isDefault: isDefault === 'on',
       },

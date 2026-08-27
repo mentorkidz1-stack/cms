@@ -52,6 +52,9 @@
 			</nav>
 			<div class="admin-sidebar__footer">
 				<a href="/" target="_blank">Voir le site &rarr;</a>
+				<a href="/admin/mon-compte" class="<%= currentPath.startsWith('/admin/mon-compte') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:account-circle-outline"></i> Mon compte
+				</a>
 				<form action="/admin/logout" method="POST">
 					<button type="submit">Déconnexion</button>
 				</form>

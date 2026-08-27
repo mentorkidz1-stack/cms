@@ -1,0 +1,25 @@
+<%- include('./_header', { title }) %>
+
+<div class="admin-card" style="max-width: 480px;">
+	<p class="hint mb-20px">Connecté en tant que <strong><%= adminEmail %></strong></p>
+
+	<h3 class="mb-15px">Changer le mot de passe</h3>
+	<form class="admin-form" action="/admin/mon-compte/mot-de-passe" method="POST">
+		<div class="field">
+			<label for="currentPassword">Mot de passe actuel</label>
+			<input type="password" id="currentPassword" name="currentPassword" required autocomplete="current-password">
+		</div>
+		<div class="field">
+			<label for="newPassword">Nouveau mot de passe</label>
+			<input type="password" id="newPassword" name="newPassword" required minlength="8" autocomplete="new-password">
+			<p class="hint">8 caractères minimum.</p>
+		</div>
+		<div class="field">
+			<label for="confirmPassword">Confirmer le nouveau mot de passe</label>
+			<input type="password" id="confirmPassword" name="confirmPassword" required minlength="8" autocomplete="new-password">
+		</div>
+		<button type="submit" class="admin-btn">Mettre à jour le mot de passe</button>
+	</form>
+</div>
+
+<%- include('./_footer') %>

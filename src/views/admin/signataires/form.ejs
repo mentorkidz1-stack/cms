@@ -13,12 +13,30 @@
 		</div>
 
 		<div class="field">
-			<label for="signature">Signature numérisée</label>
+			<label>Signature</label>
 			<% if (signatory && signatory.signatureUrl) { %>
+				<p class="hint mb-10px">Signature actuelle :</p>
 				<img class="current-image" style="object-fit: contain; background: #f5f7fb;" src="<%= signatory.signatureUrl %>" alt="">
 			<% } %>
-			<input type="file" id="signature" name="signature" accept="image/*">
-			<p class="hint">PNG avec fond transparent conseillé. Laissez vide pour conserver le fichier actuel.</p>
+
+			<div class="sig-tabs">
+				<button type="button" class="sig-tab-btn active" data-tab="draw">✍️ Dessiner ma signature</button>
+				<button type="button" class="sig-tab-btn" data-tab="upload">📁 Téléverser une image</button>
+			</div>
+
+			<div id="sig-draw-panel">
+				<canvas id="sig-pad" width="500" height="180" class="sig-pad"></canvas>
+				<div class="d-flex gap-10px mt-10px">
+					<button type="button" id="sig-clear" class="admin-btn admin-btn--ghost admin-btn--sm">Effacer</button>
+				</div>
+				<p class="hint">Dessinez avec la souris ou le doigt (écran tactile). Elle sera intégrée directement sur l'attestation.</p>
+				<input type="hidden" name="signatureDataUrl" id="sig-data-url">
+			</div>
+
+			<div id="sig-upload-panel" style="display: none;">
+				<input type="file" id="signature" name="signature" accept="image/*">
+				<p class="hint">PNG avec fond transparent conseillé.</p>
+			</div>
 		</div>
 
 		<div class="field">
@@ -41,5 +59,70 @@
 		</div>
 	</form>
 </div>
+
+<script>
+	(function () {
+		var canvas = document.getElementById('sig-pad');
+		var ctx = canvas.getContext('2d');
+		ctx.lineWidth = 2.5;
+		ctx.lineCap = 'round';
+		ctx.strokeStyle = '#1f2430';
+
+		var drawing = false;
+		var hasDrawn = false;
+
+		function getPos(evt) {
+			var rect = canvas.getBoundingClientRect();
+			var scaleX = canvas.width / rect.width;
+			var scaleY = canvas.height / rect.height;
+			return { x: (evt.clientX - rect.left) * scaleX, y: (evt.clientY - rect.top) * scaleY };
+		}
+		function start(evt) {
+			drawing = true;
+			hasDrawn = true;
+			var p = getPos(evt);
+			ctx.beginPath();
+			ctx.moveTo(p.x, p.y);
+			evt.preventDefault();
+		}
+		function move(evt) {
+			if (!drawing) return;
+			var p = getPos(evt);
+			ctx.lineTo(p.x, p.y);
+			ctx.stroke();
+			evt.preventDefault();
+		}
+		function stop() {
+			drawing = false;
+		}
+
+		canvas.addEventListener('pointerdown', start);
+		canvas.addEventListener('pointermove', move);
+		window.addEventListener('pointerup', stop);
+		canvas.style.touchAction = 'none';
+
+		document.getElementById('sig-clear').addEventListener('click', function () {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			hasDrawn = false;
+		});
+
+		var activeTab = 'draw';
+		document.querySelectorAll('.sig-tab-btn').forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				document.querySelectorAll('.sig-tab-btn').forEach(function (b) { b.classList.remove('active'); });
+				btn.classList.add('active');
+				activeTab = btn.dataset.tab;
+				document.getElementById('sig-draw-panel').style.display = activeTab === 'draw' ? 'block' : 'none';
+				document.getElementById('sig-upload-panel').style.display = activeTab === 'upload' ? 'block' : 'none';
+			});
+		});
+
+		canvas.closest('form').addEventListener('submit', function () {
+			if (activeTab === 'draw' && hasDrawn) {
+				document.getElementById('sig-data-url').value = canvas.toDataURL('image/png');
+			}
+		});
+	})();
+</script>
 
 <%- include('../_footer') %>
