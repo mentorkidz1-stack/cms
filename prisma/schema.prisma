@@ -107,6 +107,15 @@ model Settings {
   contactHeading       String @default("Contactez {{nous}}")
   contactSubheading    String @default("Une question sur nos formations ou nos services ? Écrivez-nous.")
 
+  defaultWhatsappMessage String  @default("Bonjour, je souhaite recevoir des informations sur vos offres.")
+  phoneNumber            String  @default("")
+  addressCity            String  @default("")
+  addressLandmarks       String  @default("")
+  googleMapsUrl          String  @default("")
+  openingHours           String  @default("")
+  showOnlineBadge        Boolean @default(true)
+  momoDetails            String  @default("")
+
   showFormations  Boolean @default(true)
   showServices    Boolean @default(true)
   showBlog        Boolean @default(true)
@@ -192,4 +201,14 @@ model Signatory {
   updatedAt    DateTime      @updatedAt
   receipts     Receipt[]
   certificates Certificate[]
+}
+
+model Faq {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

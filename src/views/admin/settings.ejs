@@ -221,6 +221,57 @@
 			<textarea id="contactSubheading" name="contactSubheading" rows="2" required><%= settingsForm.contactSubheading %></textarea>
 		</div>
 
+		<hr class="my-25px">
+		<h3 class="mb-15px" id="contact">Configuration du Contact</h3>
+		<p class="hint mb-15px">Ces informations alimentent directement la page Contact publique (bouton WhatsApp, appel, adresse, carte, MoMo, badge de disponibilité).</p>
+
+		<div class="field">
+			<label for="defaultWhatsappMessage">Message WhatsApp pré-rempli</label>
+			<textarea id="defaultWhatsappMessage" name="defaultWhatsappMessage" rows="2" required><%= settingsForm.defaultWhatsappMessage %></textarea>
+			<p class="hint">Pré-rempli quand un visiteur clique sur le bouton WhatsApp général de la page Contact (les fiches Formation/Service gardent leur propre message).</p>
+		</div>
+
+		<div class="field">
+			<label for="phoneNumber">Numéro de téléphone (appel direct)</label>
+			<input type="text" id="phoneNumber" name="phoneNumber" placeholder="+22990000000" value="<%= settingsForm.phoneNumber %>">
+			<p class="hint">Affiche un bouton "Appeler" — peut être différent du numéro WhatsApp. Laissez vide pour le masquer.</p>
+		</div>
+
+		<div class="field checkbox-field">
+			<input type="checkbox" id="showOnlineBadge" name="showOnlineBadge" <%= settingsForm.showOnlineBadge ? 'checked' : '' %>>
+			<label for="showOnlineBadge" style="margin-bottom: 0;">Afficher le badge "🟢 En ligne – Réponse rapide"</label>
+		</div>
+
+		<div class="field">
+			<label for="addressCity">Ville / quartier</label>
+			<input type="text" id="addressCity" name="addressCity" placeholder="Ex: Cotonou, Cadjehoun" value="<%= settingsForm.addressCity %>">
+		</div>
+
+		<div class="field">
+			<label for="addressLandmarks">Repères pour trouver le lieu</label>
+			<textarea id="addressLandmarks" name="addressLandmarks" rows="2" placeholder="Ex: 2ème rue à droite après la pharmacie, immeuble bleu au 1er étage"><%= settingsForm.addressLandmarks %></textarea>
+		</div>
+
+		<div class="field">
+			<label for="googleMapsUrl">Lien d'intégration Google Maps</label>
+			<input type="text" id="googleMapsUrl" name="googleMapsUrl" placeholder="https://www.google.com/maps/embed?..." value="<%= settingsForm.googleMapsUrl %>">
+			<p class="hint">Dans Google Maps : Partager → Intégrer une carte → copiez uniquement l'adresse (src="...") de la balise, pas tout le code.</p>
+		</div>
+
+		<div class="field">
+			<label for="openingHours">Horaires d'ouverture</label>
+			<input type="text" id="openingHours" name="openingHours" placeholder="Ex: Du Lundi au Samedi, de 08h à 18h" value="<%= settingsForm.openingHours %>">
+		</div>
+
+		<div class="field">
+			<label for="momoDetails">Numéros Mobile Money</label>
+			<input type="text" id="momoDetails" name="momoDetails" placeholder="Ex: MTN: 97XX XXXX / Moov: 95XX XXXX" value="<%= settingsForm.momoDetails %>">
+		</div>
+
+		<div class="field">
+			<p class="hint mb-0">La Mini-FAQ affichée sur la page Contact se gère dans <a href="/admin/faq">FAQ</a>.</p>
+		</div>
+
 		<button type="submit" class="admin-btn">Enregistrer</button>
 	</form>
 </div>

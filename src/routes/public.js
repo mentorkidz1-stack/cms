@@ -177,8 +177,15 @@ router.get('/about', (req, res, next) => {
   res.render('public/about', { title: 'À propos' });
 });
 
-router.get('/contact', (req, res) => {
-  res.render('public/contact', { title: 'Contact' });
+router.get('/contact', async (req, res, next) => {
+  try {
+    const s = res.locals.settings;
+    const faqs = await prisma.faq.findMany({ where: { published: true }, orderBy: { order: 'asc' } });
+    const whatsappLink = buildWhatsAppLink(s.whatsappNumber, s.defaultWhatsappMessage);
+    res.render('public/contact', { title: 'Contact', faqs, whatsappLink });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get('/galerie', async (req, res, next) => {

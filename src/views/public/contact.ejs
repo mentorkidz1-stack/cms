@@ -1,25 +1,114 @@
 <%- include('../partials/header', { title }) %>
 <%- include('../partials/page-hero', { title: settings.contactHeading, subheading: settings.contactSubheading }) %>
 
-<section class="pt-60px pb-80px">
+<section class="pt-40px pb-40px">
 	<div class="container">
-		<div class="row justify-content-center text-center">
-			<div class="col-lg-6">
-				<% if (settings.whatsappNumber) { %>
-					<a href="https://wa.me/<%= settings.whatsappNumber.replace(/[^0-9]/g, '') %>" target="_blank" rel="noopener" class="button button-type-01 fs-16 fw-semibold text-white text-capitalize transition-all d-flex align-items-center justify-content-center gap-10px mb-25px">
-						<i class="iconify fs-22" data-icon="ic:baseline-whatsapp"></i>
-						<span>Discuter sur WhatsApp</span>
-					</a>
-				<% } %>
-				<% if (settings.contactEmail) { %>
-					<p class="fs-16 mb-10px">
-						<i class="iconify fs-18 me-5px" data-icon="mdi:email-outline"></i>
-						<a href="mailto:<%= settings.contactEmail %>" class="transition-all"><%= settings.contactEmail %></a>
-					</p>
+		<div class="row gy-30px">
+			<div class="col-lg-5">
+				<div class="contact-info-card">
+					<% if (settings.showOnlineBadge) { %>
+						<span class="online-badge">🟢 En ligne – Réponse rapide</span>
+					<% } %>
+
+					<% if (settings.whatsappNumber) { %>
+						<a href="<%= whatsappLink %>" target="_blank" rel="noopener" class="button button-type-01 fs-16 fw-semibold text-white text-capitalize transition-all d-flex align-items-center justify-content-center gap-10px mt-15px">
+							<i class="iconify fs-22" data-icon="ic:baseline-whatsapp"></i>
+							<span>Discuter sur WhatsApp</span>
+						</a>
+						<p class="fs-12 text-center mb-0 mt-8px" style="opacity: 0.6;">🎙️ Notes vocales acceptées</p>
+					<% } %>
+
+					<% if (settings.phoneNumber) { %>
+						<a href="tel:<%= settings.phoneNumber.replace(/[^0-9+]/g, '') %>" class="button button-type-01 fs-16 fw-semibold text-capitalize transition-all d-flex align-items-center justify-content-center gap-10px mt-15px">
+							<i class="iconify fs-22" data-icon="mdi:phone-outline"></i>
+							<span>Appeler — <%= settings.phoneNumber %></span>
+						</a>
+					<% } %>
+
+					<div class="contact-info-list">
+						<% if (settings.contactEmail) { %>
+							<div class="contact-info-item">
+								<i class="iconify fs-20" data-icon="mdi:email-outline"></i>
+								<a href="mailto:<%= settings.contactEmail %>" class="transition-all"><%= settings.contactEmail %></a>
+							</div>
+						<% } %>
+						<% if (settings.addressCity) { %>
+							<div class="contact-info-item">
+								<i class="iconify fs-20" data-icon="mdi:map-marker-outline"></i>
+								<div>
+									<p class="mb-0 fw-semibold"><%= settings.addressCity %></p>
+									<% if (settings.addressLandmarks) { %>
+										<p class="mb-0 fs-14" style="opacity: 0.7;"><%= settings.addressLandmarks %></p>
+									<% } %>
+								</div>
+							</div>
+						<% } %>
+						<% if (settings.openingHours) { %>
+							<div class="contact-info-item">
+								<i class="iconify fs-20" data-icon="mdi:clock-outline"></i>
+								<span><%= settings.openingHours %></span>
+							</div>
+						<% } %>
+						<% if (settings.momoDetails) { %>
+							<div class="contact-info-item">
+								<i class="iconify fs-20" data-icon="mdi:cellphone-basic"></i>
+								<div>
+									<p class="mb-0 fw-semibold">Mobile Money</p>
+									<p class="mb-0 fs-14" style="opacity: 0.7;"><%= settings.momoDetails %></p>
+								</div>
+							</div>
+						<% } %>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-7">
+				<% if (settings.googleMapsUrl) { %>
+					<div class="contact-map-wrap">
+						<iframe src="<%= settings.googleMapsUrl %>" width="100%" height="100%" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Localisation"></iframe>
+					</div>
 				<% } %>
 			</div>
 		</div>
 	</div>
 </section>
+
+<% if (faqs.length > 0) { %>
+	<section class="pt-20px pb-80px">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-8">
+					<h2 class="fs-26 fw-bolder text-center mb-30px">Questions <span class="hl-style">fréquentes</span></h2>
+					<div class="faq-accordion">
+						<% faqs.forEach((faq, i) => { %>
+							<div class="faq-item">
+								<button type="button" class="faq-question">
+									<span><%= faq.question %></span>
+									<i class="iconify fs-20 faq-question__icon" data-icon="mdi:chevron-down"></i>
+								</button>
+								<div class="faq-answer">
+									<p class="mb-0"><%= faq.answer %></p>
+								</div>
+							</div>
+						<% }) %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<% } %>
+
+<script>
+	document.querySelectorAll('.faq-question').forEach(function (btn) {
+		btn.addEventListener('click', function () {
+			var item = btn.closest('.faq-item');
+			var wasOpen = item.classList.contains('is-open');
+			document.querySelectorAll('.faq-item.is-open').forEach(function (openItem) {
+				openItem.classList.remove('is-open');
+			});
+			if (!wasOpen) item.classList.add('is-open');
+		});
+	});
+</script>
 
 <%- include('../partials/footer') %>

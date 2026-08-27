@@ -41,6 +41,20 @@ function resolveSignatory(settings, signatory) {
   return signatory || { fullName: 'Le Fondateur', title: settings.siteName, signatureUrl: null, stampUrl: null };
 }
 
+// Nom + titre du signataire sous le trait de signature. Un nom long peut
+// passer sur deux lignes : on mesure sa hauteur réelle (heightOfString)
+// pour placer le titre juste en dessous au lieu d'un décalage fixe qui les
+// ferait se chevaucher.
+function drawSignatureName(doc, signer, x, y, width) {
+  const nameFontSize = signer.fullName.length > 26 ? 8 : 9;
+  doc.font('Helvetica-Bold').fontSize(nameFontSize);
+  const nameHeight = doc.heightOfString(signer.fullName, { width, align: 'center' });
+  doc.fillColor('#333333').text(signer.fullName, x, y, { width, align: 'center' });
+
+  doc.font('Helvetica').fontSize(8).fillColor('#888888')
+    .text(signer.title, x, y + nameHeight + 2, { width, align: 'center' });
+}
+
 function generateReceiptPdf(res, receipt, settings, signatory) {
   const signer = resolveSignatory(settings, signatory);
   const doc = new PDFDocument({ size: 'A4', margin: 50 });
@@ -104,10 +118,7 @@ function generateReceiptPdf(res, receipt, settings, signatory) {
     }
   }
   doc.moveTo(sigX, sigY).lineTo(sigX + 150, sigY).lineWidth(0.75).strokeColor('#999999').stroke();
-  doc.fontSize(9).font('Helvetica-Bold').fillColor('#333333')
-    .text(signer.fullName, sigX, sigY + 6, { width: 150, align: 'center' });
-  doc.fontSize(8).font('Helvetica').fillColor('#888888')
-    .text(signer.title, sigX, sigY + 20, { width: 150, align: 'center' });
+  drawSignatureName(doc, signer, sigX, sigY + 6, 150);
 
   doc.fontSize(9).fillColor('#999999')
     .text(`Merci pour votre confiance — ${settings.siteName}`, 50, 750, { width: 495, align: 'center' });
@@ -231,10 +242,7 @@ async function generateCertificatePdf(res, certificate, settings, signatory, ver
     }
   }
   doc.moveTo(sigX, bottomY + 40).lineTo(sigX + 140, bottomY + 40).lineWidth(0.75).strokeColor('#999999').stroke();
-  doc.fontSize(9).font('Helvetica-Bold').fillColor('#333333')
-    .text(signer.fullName, sigX, bottomY + 46, { width: 140, align: 'center' });
-  doc.fontSize(8).font('Helvetica').fillColor('#888888')
-    .text(signer.title, sigX, bottomY + 60, { width: 140, align: 'center' });
+  drawSignatureName(doc, signer, sigX, bottomY + 46, 140);
 
   doc.end();
 }

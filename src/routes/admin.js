@@ -854,6 +854,68 @@ router.delete('/signataires/:id', async (req, res, next) => {
   }
 });
 
+// ---------- FAQ ----------
+
+router.get('/faq', async (req, res, next) => {
+  try {
+    const faqs = await prisma.faq.findMany({ orderBy: { order: 'asc' } });
+    res.render('admin/faq/list', { title: 'FAQ', faqs });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/faq/new', (req, res) => {
+  res.render('admin/faq/form', { title: 'Nouvelle question', faq: null });
+});
+
+router.post('/faq', async (req, res, next) => {
+  try {
+    const { question, answer, order, published } = req.body;
+    await prisma.faq.create({
+      data: { question, answer, order: parseInt(order, 10) || 0, published: published === 'on' },
+    });
+    req.flash('success', 'Question ajoutée.');
+    res.redirect('/admin/faq');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/faq/:id/edit', async (req, res, next) => {
+  try {
+    const faq = await prisma.faq.findUnique({ where: { id: Number(req.params.id) } });
+    if (!faq) return res.status(404).send('Question introuvable');
+    res.render('admin/faq/form', { title: 'Modifier la question', faq });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/faq/:id', async (req, res, next) => {
+  try {
+    const { question, answer, order, published } = req.body;
+    await prisma.faq.update({
+      where: { id: Number(req.params.id) },
+      data: { question, answer, order: parseInt(order, 10) || 0, published: published === 'on' },
+    });
+    req.flash('success', 'Question mise à jour.');
+    res.redirect('/admin/faq');
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/faq/:id', async (req, res, next) => {
+  try {
+    await prisma.faq.delete({ where: { id: Number(req.params.id) } });
+    req.flash('success', 'Question supprimée.');
+    res.redirect('/admin/faq');
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ---------- Reçus ----------
 
 async function nextNumber(model, prefix) {
@@ -1022,6 +1084,8 @@ router.post('/settings', uploadSettings, async (req, res, next) => {
       equipeLabel, equipeSubheading,
       contactHeading, contactSubheading,
       logoType, logoHighlightWord, logoFontFamily, logoFontSize,
+      defaultWhatsappMessage, phoneNumber, addressCity, addressLandmarks,
+      googleMapsUrl, openingHours, showOnlineBadge, momoDetails,
       showFormations, showServices, showBlog, showEquipe,
       showGalerie, showTemoignages, showPartenaires, showAbout,
     } = req.body;
@@ -1054,6 +1118,9 @@ router.post('/settings', uploadSettings, async (req, res, next) => {
       blogLabel, blogSubheading,
       equipeLabel, equipeSubheading,
       contactHeading, contactSubheading,
+      defaultWhatsappMessage, phoneNumber, addressCity, addressLandmarks,
+      googleMapsUrl, openingHours, momoDetails,
+      showOnlineBadge: showOnlineBadge === 'on',
       showFormations: showFormations === 'on',
       showServices: showServices === 'on',
       showBlog: showBlog === 'on',

@@ -1,0 +1,39 @@
+<%- include('../_header', { title }) %>
+
+<div class="admin-toolbar">
+	<p class="hint mb-0"><%= faqs.length %> question(s)</p>
+	<a href="/admin/faq/new" class="admin-btn"><i class="iconify" data-icon="mdi:plus"></i> Ajouter une question</a>
+</div>
+
+<table class="admin-table">
+	<thead>
+		<tr>
+			<th>Question</th>
+			<th>Ordre</th>
+			<th>Statut</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (faqs.length === 0) { %>
+			<tr><td colspan="4" class="hint">Aucune question pour le moment.</td></tr>
+		<% } %>
+		<% faqs.forEach(f => { %>
+			<tr>
+				<td><%= f.question %></td>
+				<td><%= f.order %></td>
+				<td><span class="<%= f.published ? 'badge-published' : 'badge-draft' %>"><%= f.published ? 'Publié' : 'Brouillon' %></span></td>
+				<td>
+					<div class="d-flex gap-10px">
+						<a href="/admin/faq/<%= f.id %>/edit" class="admin-btn admin-btn--ghost admin-btn--sm">Modifier</a>
+						<form action="/admin/faq/<%= f.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Supprimer cette question ?');">
+							<button type="submit" class="admin-btn admin-btn--danger admin-btn--sm">Supprimer</button>
+						</form>
+					</div>
+				</td>
+			</tr>
+		<% }) %>
+	</tbody>
+</table>
+
+<%- include('../_footer') %>
