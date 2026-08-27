@@ -61,14 +61,3 @@ DROP TABLE "Settings";
 ALTER TABLE "new_Settings" RENAME TO "Settings";
 PRAGMA foreign_keys=ON;
 PRAGMA defer_foreign_keys=OFF;
-
-┌─────────────────────────────────────────────────────────┐
-│  Update available 5.22.0 -> 8.0.0-rc.12                 │
-│                                                         │
-│  This is a major update - please follow the guide at    │
-│  https://pris.ly/d/major-version-upgrade                │
-│                                                         │
-│  Run the following to update                            │
-│    npm i --save-dev prisma@latest                       │
-│    npm i @prisma/client@latest                          │
-└─────────────────────────────────────────────────────────┘
