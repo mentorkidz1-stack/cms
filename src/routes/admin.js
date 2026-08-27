@@ -1088,11 +1088,23 @@ router.post('/settings', uploadSettings, async (req, res, next) => {
       googleMapsUrl, openingHours, showOnlineBadge, momoDetails,
       showFormations, showServices, showBlog, showEquipe,
       showGalerie, showTemoignages, showPartenaires, showAbout,
+      settingsFormSubmitted,
     } = req.body;
 
     const existing = await prisma.settings.findUnique({ where: { id: 1 } });
     const bannerFile = req.files && req.files.banner ? req.files.banner[0] : null;
     const logoFile = req.files && req.files.logo ? req.files.logo[0] : null;
+
+    // Une case à cocher absente du formulaire est ambiguë : "décochée" (vrai
+    // formulaire complet, marqué par settingsFormSubmitted) ou "non envoyée"
+    // (appel partiel) ? Sans le marqueur, on préserve la valeur existante
+    // plutôt que de désactiver silencieusement une section du site.
+    const isFullFormSubmit = settingsFormSubmitted === '1';
+    function boolField(value, existingValue, fallback) {
+      if (isFullFormSubmit) return value === 'on';
+      if (value !== undefined) return value === 'on';
+      return existing ? existingValue : fallback;
+    }
 
     if (logoFile) {
       try {
@@ -1109,10 +1121,18 @@ router.post('/settings', uploadSettings, async (req, res, next) => {
       primaryColor: HEX_COLOR.test(primaryColor) ? primaryColor : (existing ? existing.primaryColor : '#356DF1'),
       bannerImageUrl: uploadedPath(bannerFile) || (existing ? existing.bannerImageUrl : null),
       logoUrl: uploadedPath(logoFile) || (existing ? existing.logoUrl : null),
-      logoType: logoType === 'image' ? 'image' : 'text',
-      logoHighlightWord: logoHighlightWord || '',
-      logoFontFamily: logoFontFamily === 'serif' ? 'serif' : 'sans',
-      logoFontSize: parseInt(logoFontSize, 10) || 24,
+      logoType: logoType !== undefined
+        ? (logoType === 'image' ? 'image' : 'text')
+        : (existing ? existing.logoType : 'text'),
+      logoHighlightWord: logoHighlightWord !== undefined
+        ? logoHighlightWord
+        : (existing ? existing.logoHighlightWord : ''),
+      logoFontFamily: logoFontFamily !== undefined
+        ? (logoFontFamily === 'serif' ? 'serif' : 'sans')
+        : (existing ? existing.logoFontFamily : 'sans'),
+      logoFontSize: logoFontSize !== undefined
+        ? (parseInt(logoFontSize, 10) || 24)
+        : (existing ? existing.logoFontSize : 24),
       formationsLabel, formationsLabelSingular, formationsSubheading,
       servicesLabel, servicesLabelSingular, servicesSubheading,
       blogLabel, blogSubheading,
@@ -1120,15 +1140,15 @@ router.post('/settings', uploadSettings, async (req, res, next) => {
       contactHeading, contactSubheading,
       defaultWhatsappMessage, phoneNumber, addressCity, addressLandmarks,
       googleMapsUrl, openingHours, momoDetails,
-      showOnlineBadge: showOnlineBadge === 'on',
-      showFormations: showFormations === 'on',
-      showServices: showServices === 'on',
-      showBlog: showBlog === 'on',
-      showEquipe: showEquipe === 'on',
-      showGalerie: showGalerie === 'on',
-      showTemoignages: showTemoignages === 'on',
-      showPartenaires: showPartenaires === 'on',
-      showAbout: showAbout === 'on',
+      showOnlineBadge: boolField(showOnlineBadge, existing && existing.showOnlineBadge, true),
+      showFormations: boolField(showFormations, existing && existing.showFormations, true),
+      showServices: boolField(showServices, existing && existing.showServices, true),
+      showBlog: boolField(showBlog, existing && existing.showBlog, true),
+      showEquipe: boolField(showEquipe, existing && existing.showEquipe, true),
+      showGalerie: boolField(showGalerie, existing && existing.showGalerie, true),
+      showTemoignages: boolField(showTemoignages, existing && existing.showTemoignages, true),
+      showPartenaires: boolField(showPartenaires, existing && existing.showPartenaires, true),
+      showAbout: boolField(showAbout, existing && existing.showAbout, true),
     };
     await prisma.settings.upsert({
       where: { id: 1 },
