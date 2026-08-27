@@ -162,7 +162,7 @@
 }
 
 /* CTA principal : dégradé, icône, effet au survol */
-.nav-cta {
+.mkp-layout .nav-cta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -177,7 +177,7 @@
   box-shadow: 0 6px 16px color-mix(in srgb, var(--regal-blue) 35%, transparent);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.nav-cta:hover {
+.mkp-layout .nav-cta:hover {
   color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 10px 22px color-mix(in srgb, var(--regal-blue) 45%, transparent);
