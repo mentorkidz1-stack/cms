@@ -41,6 +41,13 @@
 .site-logo--text.site-logo--footer {
   color: var(--regal-black, #212427);
 }
+/* Modèle "Agency Dark" : fond sombre, le logo texte doit rester blanc. */
+.site-logo--text.site-logo--dark {
+  color: #fff;
+}
+.site-logo--text.site-logo--dark:hover {
+  color: #fff;
+}
 .site-logo--text:hover {
   color: var(--regal-black, #212427);
 }

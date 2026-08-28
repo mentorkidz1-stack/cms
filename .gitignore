@@ -4,3 +4,4 @@ dev.db
 dev.db-journal
 public/uploads/*
 !public/uploads/.gitkeep
+public/_upscale-source/

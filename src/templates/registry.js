@@ -23,6 +23,13 @@ const TEMPLATES = [
     thumbnail: '/images/templates/service-express.jpg',
     description: "Axé sur la présentation des prestations, la localisation et la demande de devis rapide.",
   },
+  {
+    id: 'agency-dark',
+    name: 'Agency Dark',
+    category: 'Agence',
+    thumbnail: '/images/templates/agency-dark.jpg',
+    description: "Design sombre et premium façon agence digitale — crédibilité, équipe et conversion WhatsApp.",
+  },
 ];
 
 const DEFAULT_TEMPLATE_ID = 'cabinet-pro';

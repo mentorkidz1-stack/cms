@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %> | <%= settings.siteName %></title>
+	<meta name="description" content="<%= settings.siteName %> — <%= settings.formationsLabel.toLowerCase() %>, <%= settings.servicesLabel.toLowerCase() %> et solutions en analyse de données, développement informatique et intelligence artificielle.">
+	<link rel="shortcut icon" href="/images/favicon.png">
+	<link rel="stylesheet" href="/templates/agency-dark/chunks/main.css">
+	<!-- Réutilise quelques composants partagés du site (logo, partenaires, bouton WhatsApp flottant) -->
+	<link rel="stylesheet" href="/assets/css/site.css">
+	<style>
+		:root {
+			--color-primary: <%= settings.primaryColor %>;
+			--color-primary-dark: color-mix(in srgb, <%= settings.primaryColor %> 78%, black);
+		}
+		body { font-family: var(--font-urbanist), sans-serif; background: var(--color-darker); }
+		h1, h2, h3, h4, h5, h6 { font-family: var(--font-poppins), sans-serif; }
+		@font-face { font-family: Urbanist; src: url(/templates/agency-dark/media/Urbanist-Regular.43ty_p7kgzjbx.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+		@font-face { font-family: Urbanist; src: url(/templates/agency-dark/media/Urbanist-SemiBold.29ee1k0-29yr4.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+		@font-face { font-family: Urbanist; src: url(/templates/agency-dark/media/Urbanist-Bold.2b5km2otjvqkz.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+		@font-face { font-family: Poppins; src: url(/templates/agency-dark/media/Poppins-Regular.08_052zv8qp0n.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+		@font-face { font-family: Poppins; src: url(/templates/agency-dark/media/Poppins-Medium.3i8268v1_x5oz.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+		.container { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: 20px; }
+		.row { --gutter-x: 2rem; --gutter-y: 2rem; margin-inline: calc(var(--gutter-x) / -2); margin-block: calc(var(--gutter-y) / -2); flex-wrap: wrap; display: flex; }
+		.row > * { padding-inline: calc(var(--gutter-x) / 2); padding-block: calc(var(--gutter-y) / 2); }
+		.ad-mobile-menu { max-height: 0; opacity: 0; overflow: hidden; transition: all .3s ease; }
+		.ad-mobile-menu.is-open { max-height: 600px; opacity: 1; }
+		.ad-burger.is-open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+		.ad-burger.is-open span:nth-child(2) { opacity: 0; }
+		.ad-burger.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+		.ad-faq-item.is-open .ad-faq-plus { display: none; }
+		.ad-faq-item:not(.is-open) .ad-faq-minus { display: none; }
+		.ad-faq-item:not(.is-open) .ad-faq-answer { display: none; }
+	</style>
+</head>
+<body class="antialiased" style="background: var(--color-darker);">
+<%- include('../../../partials/_template-preview-banner') %>
+
+<%
+	const navItems = [
+		{ href: '/', label: 'Accueil', show: true },
+		{ href: '/formations', label: settings.formationsLabel, show: settings.showFormations },
+		{ href: '/services', label: settings.servicesLabel, show: settings.showServices },
+		{ href: '/equipe', label: settings.equipeLabel, show: settings.showEquipe },
+		{ href: '/blog', label: settings.blogLabel, show: settings.showBlog },
+		{ href: '/about', label: 'À propos', show: settings.showAbout },
+	].filter(i => i.show);
+	const waGeneral = settings.whatsappNumber
+		? `https://wa.me/${settings.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(settings.defaultWhatsappMessage || "Bonjour, j'aimerais avoir plus d'informations.")}`
+		: '/contact';
+%>
+
+<!-- ===== Barre du haut + navigation ===== -->
+<div class="fixed top-0 left-0 w-full z-50 border-b border-white/20" style="background: var(--color-darker);">
+	<div class="border-b border-white/10 py-2.5 px-5 lg:px-10 hidden md:block">
+		<div class="container !max-w-none flex justify-between items-center gap-x-10 gap-y-1.5">
+			<ul class="flex items-center gap-6 flex-wrap">
+				<% if (settings.contactEmail) { %>
+					<li class="flex items-center gap-2"><i class="iconify" data-icon="mdi:email-outline" style="color: var(--color-primary);"></i><span class="text-sm text-white"><%= settings.contactEmail %></span></li>
+				<% } %>
+				<% if (settings.phoneNumber) { %>
+					<li class="flex items-center gap-2"><i class="iconify" data-icon="mdi:phone-outline" style="color: var(--color-primary);"></i><span class="text-sm text-white"><%= settings.phoneNumber %></span></li>
+				<% } %>
+				<% if (settings.addressCity) { %>
+					<li class="flex items-center gap-2"><i class="iconify" data-icon="mdi:map-marker-outline" style="color: var(--color-primary);"></i><span class="text-sm text-white"><%= settings.addressCity %></span></li>
+				<% } %>
+			</ul>
+			<% if (settings.showOnlineBadge) { %>
+				<span class="text-sm font-medium" style="color: var(--color-primary);">🟢 En ligne — Réponse rapide</span>
+			<% } %>
+		</div>
+	</div>
+	<div class="px-5 lg:px-10">
+		<div class="container !max-w-none flex w-full items-center">
+			<div class="my-3.5"><%- include('../../../partials/_logo', { variant: 'dark' }) %></div>
+			<div class="w-px bg-white/20 shrink-0 mx-5 lg:mx-10 hidden lg:block"></div>
+			<nav class="hidden lg:flex items-center self-center w-full gap-6 py-4">
+				<ul class="flex items-center me-auto gap-3 lg:gap-8">
+					<% navItems.forEach(item => { %>
+						<li><a class="text-base font-medium text-white transition-colors" style="text-decoration:none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='#fff'" href="<%= item.href %>"><%= item.label %></a></li>
+					<% }) %>
+				</ul>
+				<a href="/contact" class="inline-flex items-center justify-center h-10 gap-2 rounded-xl px-6 text-sm font-semibold" style="background: var(--color-primary); color: var(--color-darker); text-decoration:none;">Nous contacter</a>
+			</nav>
+			<div class="ml-auto self-center my-4 lg:hidden">
+				<button type="button" id="ad-burger" aria-label="Ouvrir le menu" class="ad-burger relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-lg bg-white/10">
+					<span class="block h-0.5 w-5 rounded-full bg-white transition-all"></span>
+					<span class="block h-0.5 w-5 rounded-full bg-white transition-all"></span>
+					<span class="block h-0.5 w-5 rounded-full bg-white transition-all"></span>
+				</button>
+			</div>
+		</div>
+		<div id="ad-mobile-menu" class="ad-mobile-menu lg:hidden">
+			<ul class="flex flex-col gap-1 pb-5">
+				<% navItems.forEach(item => { %>
+					<li><a class="block rounded-lg px-3 py-2.5 text-base font-medium text-white/85 hover:bg-white/8" style="text-decoration:none;" href="<%= item.href %>"><%= item.label %></a></li>
+				<% }) %>
+				<li class="pt-2"><a href="<%= waGeneral %>" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold" style="background: var(--color-primary); color: var(--color-darker); text-decoration:none;"><i class="iconify" data-icon="ic:baseline-whatsapp"></i> Nous écrire sur WhatsApp</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<!-- ===== Hero ===== -->
+<header class="relative flex flex-col" style="padding-top: 96px;">
+	<div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" style="background: var(--color-darker);">
+		<img alt="" loading="lazy" class="absolute opacity-60" style="top:-80px; left:50%; transform: translateX(-50%); max-width: 900px; width: 100%;" src="/templates/agency-dark/media/glow-a.23tzufle8doy5.png">
+	</div>
+	<div class="flex-1 flex items-center py-16 md:py-24">
+		<div class="container">
+			<div class="row items-center justify-between gy-12">
+				<div class="lg:column-7 text-center lg:text-start" style="flex: 0 0 100%; max-width: 100%;">
+					<div class="lg-col-7" style="max-width: 640px;">
+						<span class="inline-flex text-xs tracking-[1px] px-3.5 py-1.25 font-medium uppercase items-center rounded-full border mb-4" style="border-color: var(--color-primary); color: var(--color-primary);"><%= settings.formationsLabel %> · <%= settings.servicesLabel %></span>
+						<h1 class="text-4xl md:text-5xl xl:text-6xl leading-tight text-white font-bold mb-6"><%- renderHighlighted(settings.heroTitle) %></h1>
+						<p class="text-lg text-white/70 mb-8" style="max-width: 560px;"><%= settings.heroSubtitle %></p>
+						<div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+							<% if (settings.showFormations) { %>
+								<a href="/formations" class="inline-flex items-center justify-center h-13 gap-2 rounded-xl px-7 text-base font-semibold" style="background: var(--color-primary); color: var(--color-darker); text-decoration:none;">Découvrir nos <%= settings.formationsLabel.toLowerCase() %></a>
+							<% } %>
+							<a href="<%= waGeneral %>" target="_blank" rel="noopener" class="inline-flex items-center justify-center h-13 gap-2 rounded-xl px-7 text-base font-semibold border border-white/25 text-white" style="text-decoration:none;">
+								<i class="iconify" data-icon="ic:baseline-whatsapp"></i> WhatsApp
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<% if (testimonials.length > 0) { %>
+				<div class="mt-14 flex justify-center lg:justify-end">
+					<div class="flex flex-col border rounded-xl p-6" style="background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.12); backdrop-filter: blur(4px); max-width: 420px;">
+						<div class="flex items-center gap-4 mb-4">
+							<img alt="" class="rounded-full" width="52" height="52" style="object-fit: cover;" src="<%= testimonials[0].photoUrl || '/images/avatar/user.png' %>">
+							<div>
+								<h6 class="text-base font-bold text-white mb-0"><%= testimonials[0].authorName %></h6>
+								<span class="text-sm text-white/60"><%= testimonials[0].authorRole || '' %></span>
+							</div>
+						</div>
+						<p class="text-white/85 text-base leading-snug">« <%= testimonials[0].quote %> »</p>
+					</div>
+				</div>
+			<% } %>
+		</div>
+	</div>
+</header>
+
+<main class="relative" style="background: #fff;">
+
+	<!-- ===== À propos ===== -->
+	<section class="relative w-full py-20 lg:py-28">
+		<div class="container">
+			<div class="row justify-between items-center gy-12">
+				<div class="lg:column-6" style="flex: 1 1 480px;">
+					<span class="inline-flex text-xs tracking-[1px] px-3.5 py-1.25 font-medium uppercase items-center rounded-full border mb-3" style="border-color: var(--color-darker); color: var(--color-darker);">À propos</span>
+					<h2 class="text-3xl md:text-4xl leading-tight font-bold mb-5" style="color: var(--color-darker);">Des solutions concrètes, pensées pour votre croissance</h2>
+					<div class="text-base leading-relaxed mb-8" style="color: var(--color-body);"><%- settings.aboutContent %></div>
+					<div class="flex gap-8 flex-wrap">
+						<div class="relative grow flex items-center pb-1 gap-4 border-b" style="border-color: var(--color-lighter);">
+							<div class="text-4xl xl:text-5xl font-semibold" style="color: var(--color-darker);"><%= formations.length + services.length %>+</div>
+							<div class="text-base font-medium leading-snug">Offres actives</div>
+						</div>
+						<div class="relative grow flex items-center pb-1 gap-4 border-b" style="border-color: var(--color-lighter);">
+							<div class="text-4xl xl:text-5xl font-semibold" style="color: var(--color-darker);"><%= team.length %>+</div>
+							<div class="text-base font-medium leading-snug">Membres de l'équipe</div>
+						</div>
+					</div>
+				</div>
+				<div class="lg:column-5" style="flex: 1 1 380px;">
+					<img alt="" class="w-full rounded-3xl" style="object-fit: cover; max-height: 480px;" src="<%= settings.bannerImageUrl || '/templates/agency-dark/media/about-large.1lqnt_udbx8s3.jpg' %>">
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== Pourquoi nous / Partenaires ===== -->
+	<section class="relative w-full py-20 lg:py-28" style="background: var(--color-lightest);">
+		<div class="container">
+			<div class="row justify-between items-center gy-12">
+				<div class="lg:column-6" style="flex: 1 1 420px;">
+					<div class="relative" style="max-width: 460px;">
+						<img alt="" class="w-full rounded-3xl" src="/templates/agency-dark/media/why.1uo--goxxqtnc.jpg">
+						<div class="bg-white rounded-2xl p-5 text-center absolute" style="top: 50%; right: -10px; transform: translateY(-50%); width: 150px; box-shadow: 0 10px 30px rgba(0,0,0,.12);">
+							<div class="text-3xl font-bold" style="color: var(--color-darker);"><%= formations.length + services.length %>+</div>
+							<div class="text-sm" style="color: var(--color-body);">Offres actives</div>
+						</div>
+					</div>
+				</div>
+				<div class="lg:column-6" style="flex: 1 1 420px;">
+					<span class="inline-flex text-xs tracking-[1px] px-3.5 py-1.25 font-medium uppercase items-center rounded-full border mb-3" style="border-color: var(--color-darker); color: var(--color-darker);">Pourquoi nous</span>
+					<h2 class="text-3xl md:text-4xl leading-tight font-bold mb-4" style="color: var(--color-darker);">Choisir <%= settings.siteName %> pour grandir</h2>
+					<p class="text-base mb-6" style="color: var(--color-body);">Un accompagnement humain, des solutions sur mesure et une conversion pensée pour votre réalité — sans carte bancaire ni compte à créer.</p>
+					<ul class="flex flex-col gap-5">
+						<li class="flex gap-3 items-start">
+							<i class="iconify" style="color: var(--color-primary); font-size: 28px;" data-icon="mdi:target-account"></i>
+							<span class="text-lg font-medium" style="color: var(--color-darker);">Une approche orientée résultats</span>
+						</li>
+						<li class="flex gap-3 items-start">
+							<i class="iconify" style="color: var(--color-primary); font-size: 28px;" data-icon="mdi:whatsapp"></i>
+							<span class="text-lg font-medium" style="color: var(--color-darker);">Conversion directe par WhatsApp</span>
+						</li>
+						<li class="flex gap-3 items-start">
+							<i class="iconify" style="color: var(--color-primary); font-size: 28px;" data-icon="mdi:certificate-outline"></i>
+							<span class="text-lg font-medium" style="color: var(--color-darker);">Attestations &amp; reçus professionnels</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<% if (settings.showPartenaires && partners.length > 0) { %>
+				<div class="pt-14 mt-14 border-t" style="border-color: var(--color-lighter);">
+					<div class="partner-strip" style="justify-content: flex-start;">
+						<% partners.forEach(partner => { %>
+							<%- include('../../../partials/_partner-logo', { partner }) %>
+						<% }) %>
+					</div>
+				</div>
+			<% } %>
+		</div>
+	</section>
+
+	<!-- ===== Équipe ===== -->
+	<% if (settings.showEquipe) { %>
+	<section class="relative w-full py-20 lg:py-28" style="background: var(--color-darker);">
+		<div class="container">
+			<div class="row justify-between items-center gy-12">
+				<div class="lg:column-5" style="flex: 1 1 380px;">
+					<span class="inline-flex text-xs tracking-[1px] px-3.5 py-1.25 font-medium uppercase items-center rounded-full border mb-3" style="border-color: var(--color-primary); color: var(--color-primary);">Équipe</span>
+					<h2 class="text-3xl md:text-4xl leading-tight font-bold text-white mb-4">Rencontrez notre <%= settings.equipeLabel.toLowerCase() %></h2>
+					<p class="text-base text-white/70 mb-8">Des expert(e)s en analyse de données, développement et intelligence artificielle, à votre écoute.</p>
+					<a href="/equipe" class="inline-flex items-center gap-3 rounded-xl px-6 h-12 text-base font-semibold" style="background: var(--color-primary); color: var(--color-darker); text-decoration:none;">Voir toute l'équipe →</a>
+				</div>
+				<div class="lg:column-6" style="flex: 1 1 420px;">
+					<% if (team.length > 0) { %>
+						<div class="grid grid-cols-3 gap-4">
+							<% team.slice(0, 6).forEach((member, i) => { %>
+								<a href="/equipe/<%= member.slug %>" style="text-decoration:none;">
+									<img alt="<%= member.name %>" class="w-full <%= i % 2 === 0 ? 'rounded-3xl' : 'rounded-full' %>" style="aspect-ratio: 1; object-fit: cover;" src="<%= member.photoUrl || '/images/avatar/user.png' %>">
+								</a>
+							<% }) %>
+						</div>
+					<% } else { %>
+						<div class="grid grid-cols-3 gap-4">
+							<% ['a','b','c','d','e','f'].forEach((letter, i) => { %>
+								<img alt="" class="w-full <%= i % 2 === 0 ? 'rounded-3xl' : 'rounded-full' %>" style="aspect-ratio: 1; object-fit: cover;" src="/templates/agency-dark/media/team-small-<%= letter %>.<%= ['28rgesy8lhj37','36zf3_2nz_g9q','388-_ptnsb7va','1u8eo9aghz6-7','1xje27n9_u-ws','2_tjlotuybpeo'][i] %>.jpg">
+							<% }) %>
+						</div>
+					<% } %>
+				</div>
+			</div>
+		</div>
+	</section>
+	<% } %>
+
+	<!-- ===== Formations & Services ===== -->
+	<section class="relative w-full py-20 lg:py-28">
+		<div class="container">
+			<div class="text-center mb-14" style="max-width: 680px; margin-inline: auto;">
+				<span class="inline-flex text-xs tracking-[1px] px-3.5 py-1.25 font-medium uppercase items-center rounded-full border mb-3" style="border-color: var(--color-darker); color: var(--color-darker);">Notre offre</span>
+				<h2 class="text-3xl md:text-4xl leading-tight font-bold mb-4" style="color: var(--color-darker);">Faites avancer votre projet dès aujourd'hui</h2>
+				<p class="text-lg" style="color: var(--color-body);">Choisissez une formation ou un service, puis échangez directement avec nous sur WhatsApp.</p>
+			</div>
+			<% if (catalogItems.length === 0) { %>
+				<p class="text-center" style="color: var(--color-body);">Aucun contenu publié pour le moment.</p>
+			<% } else { %>
+				<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
+					<% catalogItems.slice(0, 6).forEach(item => { %>
+						<div class="border p-6 rounded-2xl" style="border-color: var(--color-lighter); background: var(--color-lightest);">
+							<img alt="<%= item.title %>" class="w-full rounded-xl mb-5" style="aspect-ratio: 16/10; object-fit: cover;" src="<%= item.imageUrl || '/images/courses/courses-large-01.png' %>">
+							<span class="text-xs font-semibold uppercase tracking-wide" style="color: var(--color-primary-dark, var(--color-primary));"><%= item.badge %></span>
+							<h4 class="text-xl font-bold mt-1 mb-2" style="color: var(--color-darker);"><a href="<%= item.detailHref %>" style="color: inherit; text-decoration:none;"><%= item.title %></a></h4>
+							<p class="text-base mb-4" style="color: var(--color-body); font-size: 17px; font-weight: 600;"><%= item.price ? item.price.toLocaleString('fr-FR') + ' FCFA' : 'Sur devis' %></p>
+							<% if (item.whatsappLink) { %>
+								<a href="<%= item.whatsappLink %>" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold" style="background-color: #25d366; color: #fff; text-decoration:none;">
+									<i class="iconify" data-icon="ic:baseline-whatsapp"></i> Commander sur WhatsApp
+								</a>
+							<% } %>
+						</div>
+					<% }) %>
+				</div>
+			<% } %>
+			<div class="text-base mt-10 text-center" style="color: var(--color-body);">
+				Une question sur nos offres ? <a href="<%= waGeneral %>" target="_blank" rel="noopener" style="color: var(--color-primary-dark, var(--color-primary)); font-weight: 600; text-decoration:none;">Contactez-nous</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== Témoignages ===== -->
+	<% if (settings.showTemoignages && testimonials.length > 0) { %>
+	<section class="relative w-full py-20 lg:py-28" style="background: var(--color-darker);">
+		<div class="container">
+			<div class="text-center mb-14" style="max-width: 620px; margin-inline: auto;">
+				<span class="inline-flex text-xs tracking-[1px] px-3.5 py-1.25 font-medium uppercase items-center rounded-full border mb-3" style="border-color: var(--color-primary); color: var(--color-primary);">Témoignages</span>
+				<h2 class="text-3xl md:text-4xl leading-tight font-bold text-white">Ils nous font confiance</h2>
+			</div>
+			<div class="row gy-8">
+				<% testimonials.slice(0, 3).forEach(testimonial => { %>
+					<div class="lg:column-4" style="flex: 1 1 300px;">
+						<div class="border rounded-2xl p-6 h-full" style="border-color: rgba(255,255,255,.12); background: rgba(255,255,255,.05);">
+							<div class="flex items-center gap-4 mb-4">
+								<img alt="" class="rounded-full" width="52" height="52" style="object-fit: cover;" src="<%= testimonial.photoUrl || '/images/avatar/user.png' %>">
+								<div>
+									<h6 class="text-base font-bold text-white mb-0"><%= testimonial.authorName %></h6>
+									<span class="text-sm text-white/60"><%= testimonial.authorRole || '' %></span>
+								</div>
+							</div>
+							<p class="text-white/85 text-base leading-snug">« <%= testimonial.quote %> »</p>
+						</div>
+					</div>
+				<% }) %>
+			</div>
+		</div>
+	</section>
+	<% } %>
+
+	<!-- ===== FAQ ===== -->
+	<% if (faqs.length > 0) { %>
+	<section class="relative w-full py-20 lg:py-28">
+		<div class="container">
+			<div class="row gy-12 items-start justify-between">
+				<div class="lg:column-5" style="flex: 1 1 380px;">
+					<span class="inline-flex text-xs tracking-[1px] px-3.5 py-1.25 font-medium uppercase items-center rounded-full border mb-3" style="border-color: var(--color-darker); color: var(--color-darker);">FAQ</span>
+					<h2 class="text-3xl md:text-4xl leading-tight font-bold mb-4" style="color: var(--color-darker);">Comment pouvons-nous vous aider ?</h2>
+					<p class="text-base mb-6" style="color: var(--color-body);">Les réponses aux questions les plus fréquentes. Pour tout le reste, écrivez-nous directement.</p>
+					<a href="<%= waGeneral %>" target="_blank" rel="noopener" class="inline-flex items-center gap-3 rounded-xl px-6 h-12 text-base font-semibold" style="background: var(--color-primary); color: var(--color-darker); text-decoration:none;">Nous écrire →</a>
+				</div>
+				<div class="lg:column-7" style="flex: 1 1 480px;">
+					<div class="flex flex-col gap-4">
+						<% faqs.forEach((faq, i) => { %>
+							<div class="ad-faq-item border rounded-2xl <%= i === 0 ? 'is-open' : '' %>" style="border-color: var(--color-lighter); background: #fff;">
+								<button type="button" class="ad-faq-toggle flex w-full items-center justify-between p-5 text-start font-semibold" style="color: var(--color-darker); font-size: 17px;">
+									<span><%= faq.question %></span>
+									<i class="iconify ad-faq-plus" data-icon="mdi:plus" style="font-size: 22px; color: var(--color-body);"></i>
+									<i class="iconify ad-faq-minus" data-icon="mdi:minus" style="font-size: 22px; color: var(--color-primary);"></i>
+								</button>
+								<div class="ad-faq-answer px-5 pb-5 text-base leading-relaxed" style="color: var(--color-body);"><%= faq.answer %></div>
+							</div>
+						<% }) %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<% } %>
+</main>
+
+<!-- ===== Pied de page ===== -->
+<footer class="relative w-full" style="background: var(--color-darker);">
+	<div class="py-16">
+		<div class="container">
+			<div class="row justify-between gy-10">
+				<div class="lg:column-4" style="flex: 1 1 280px;">
+					<%- include('../../../partials/_logo', { variant: 'dark' }) %>
+					<p class="text-white/70 mt-5"><%= settings.siteName %> — Analyse de données, développement informatique et intelligence artificielle.</p>
+				</div>
+				<div class="lg:column-4" style="flex: 1 1 220px;">
+					<h4 class="text-white font-semibold mb-4">Navigation</h4>
+					<ul class="flex flex-col gap-3">
+						<% navItems.forEach(item => { %>
+							<li><a class="text-white/70 transition-colors" style="text-decoration:none;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color=''" href="<%= item.href %>"><%= item.label %></a></li>
+						<% }) %>
+					</ul>
+				</div>
+				<div class="lg:column-4" style="flex: 1 1 260px;">
+					<h4 class="text-white font-semibold mb-4">Contact</h4>
+					<ul class="flex flex-col gap-3">
+						<% if (settings.contactEmail) { %><li><a class="text-white/70" style="text-decoration:none;" href="mailto:<%= settings.contactEmail %>"><%= settings.contactEmail %></a></li><% } %>
+						<% if (settings.whatsappNumber) { %><li><a class="text-white/70" style="text-decoration:none;" href="https://wa.me/<%= settings.whatsappNumber.replace(/[^0-9]/g, '') %>" target="_blank" rel="noopener">WhatsApp : <%= settings.whatsappNumber %></a></li><% } %>
+						<% if (settings.addressCity) { %><li class="text-white/70"><%= settings.addressCity %></li><% } %>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="py-6 border-t" style="border-color: rgba(255,255,255,.12);">
+		<div class="container flex items-center justify-center">
+			<p class="text-white/60 text-sm">&copy; <%= new Date().getFullYear() %> <%= settings.siteName %>. Tous droits réservés.</p>
+		</div>
+	</div>
+</footer>
+
+<script>
+	(function () {
+		var burger = document.getElementById('ad-burger');
+		var menu = document.getElementById('ad-mobile-menu');
+		if (burger && menu) {
+			burger.addEventListener('click', function () {
+				burger.classList.toggle('is-open');
+				menu.classList.toggle('is-open');
+			});
+		}
+		document.querySelectorAll('.ad-faq-toggle').forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				var item = btn.closest('.ad-faq-item');
+				var wasOpen = item.classList.contains('is-open');
+				document.querySelectorAll('.ad-faq-item.is-open').forEach(function (openItem) { openItem.classList.remove('is-open'); });
+				if (!wasOpen) item.classList.add('is-open');
+			});
+		});
+	})();
+</script>
+<script type="text/javascript" src="/assets/js/iconify.min.js" defer></script>
+<% if (settings.whatsappNumber) { %>
+	<a href="https://wa.me/<%= settings.whatsappNumber.replace(/[^0-9]/g, '') %>?text=<%= encodeURIComponent(`Bonjour ${settings.siteName}, j'aimerais avoir plus d'informations.`) %>"
+	   target="_blank" rel="noopener" class="wa-float-btn" aria-label="Discuter sur WhatsApp">
+		<i class="iconify" data-icon="ic:baseline-whatsapp" style="font-size: 28px;"></i>
+	</a>
+<% } %>
+</body>
+</html>
