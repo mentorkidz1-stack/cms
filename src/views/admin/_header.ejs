@@ -16,6 +16,9 @@
 				<a href="/admin" class="<%= currentPath === '/admin' ? 'active' : '' %>">
 					<i class="iconify" data-icon="mdi:view-dashboard-outline"></i> Tableau de bord
 				</a>
+				<a href="/admin/templates" class="<%= currentPath.startsWith('/admin/templates') ? 'active' : '' %>">
+					<i class="iconify" data-icon="mdi:view-grid-outline"></i> Modèles de site
+				</a>
 				<a href="/admin/formations" class="<%= currentPath.startsWith('/admin/formations') ? 'active' : '' %>">
 					<i class="iconify" data-icon="mdi:school-outline"></i> <%= settings.formationsLabel %>
 				</a>

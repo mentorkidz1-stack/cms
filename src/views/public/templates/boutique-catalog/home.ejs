@@ -1,0 +1,70 @@
+<%- include('../../../partials/header', { title }) %>
+<%- include('../../../partials/_template-preview-banner') %>
+
+<section class="catalog-hero pt-50px pb-50px">
+	<div class="container text-center">
+		<h1 class="fw-bolder mb-15px"><%- renderHighlighted(settings.heroTitle) %></h1>
+		<p class="mb-25px mx-auto" style="max-width: 620px;"><%= settings.heroSubtitle %></p>
+		<a href="#catalogue" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all">Voir le catalogue</a>
+	</div>
+</section>
+
+<% if (settings.showPartenaires && partners.length > 0) { %>
+<section class="pt-10px pb-30px">
+	<div class="container">
+		<div class="partner-strip">
+			<% partners.forEach(partner => { %>
+				<%- include('../../../partials/_partner-logo', { partner }) %>
+			<% }) %>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<section class="pt-30px pb-80px" id="catalogue">
+	<div class="container">
+		<div class="text-center mb-40px">
+			<h2 class="fs-30 fw-semibold mb-10px">Notre <span class="hl-style">catalogue</span></h2>
+			<p style="opacity: 0.7;">Choisissez, puis commandez directement sur WhatsApp — sans compte, sans carte bancaire.</p>
+		</div>
+		<% if (catalogItems.length === 0) { %>
+			<p class="text-center">Aucun article publié pour le moment.</p>
+		<% } else { %>
+			<div class="catalog-grid">
+				<% catalogItems.forEach(item => { %>
+					<%- include('../../../partials/_catalog-tile', { item }) %>
+				<% }) %>
+			</div>
+		<% } %>
+	</div>
+</section>
+
+<% if (settings.showTemoignages && testimonials.length > 0) { %>
+<section class="pt-40px pb-80px" style="background-color: #f5f7fb;">
+	<div class="container">
+		<div class="text-center mb-30px">
+			<h2 class="fs-30 fw-semibold mb-0">Ils nous font <span class="hl-style">confiance</span></h2>
+		</div>
+		<div class="row">
+			<% testimonials.slice(0, 3).forEach(testimonial => { %>
+				<div class="col-md-6 col-lg-4 mb-30px">
+					<%- include('../../../partials/_testimonial-card', { testimonial }) %>
+				</div>
+			<% }) %>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<section class="pt-60px pb-60px">
+	<div class="container text-center">
+		<h2 class="fs-26 fw-semibold mb-15px">Une question sur un article ?</h2>
+		<% if (settings.whatsappNumber) { %>
+			<a href="https://wa.me/<%= settings.whatsappNumber.replace(/[^0-9]/g, '') %>?text=<%= encodeURIComponent(settings.defaultWhatsappMessage || 'Bonjour, j\'aimerais avoir plus d\'informations.') %>" target="_blank" rel="noopener" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all d-inline-flex align-items-center gap-10px">
+				<i class="iconify fs-18" data-icon="ic:baseline-whatsapp"></i> Nous écrire sur WhatsApp
+			</a>
+		<% } %>
+	</div>
+</section>
+
+<%- include('../../../partials/footer') %>

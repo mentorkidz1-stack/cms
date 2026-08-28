@@ -1,15 +1,19 @@
 const express = require('express');
 const prisma = require('../db');
 const { buildWhatsAppLink, formationMessage, serviceMessage } = require('../utils/whatsapp');
+const { getTemplate, homeViewFor, isValidTemplateId } = require('../templates/registry');
 
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   try {
     const s = res.locals.settings;
-    const [formations, posts, team, testimonials, partners] = await Promise.all([
+    const [formations, services, posts, team, testimonials, partners, faqs] = await Promise.all([
       s.showFormations
         ? prisma.formation.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' }, take: 6 })
+        : [],
+      s.showServices
+        ? prisma.service.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' }, take: 6 })
         : [],
       s.showBlog
         ? prisma.post.findMany({
@@ -28,8 +32,49 @@ router.get('/', async (req, res, next) => {
       s.showPartenaires
         ? prisma.partner.findMany({ where: { published: true }, orderBy: { order: 'asc' } })
         : [],
+      prisma.faq.findMany({ where: { published: true }, orderBy: { order: 'asc' } }),
     ]);
-    res.render('public/home', { title: s.siteName, formations, posts, team, testimonials, partners });
+
+    // Catalogue unifié (formations + services) pour le modèle "Boutique & Catalogue" :
+    // chaque fiche pointe directement vers une commande WhatsApp pré-remplie.
+    const catalogItems = [
+      ...formations.map((f) => ({
+        title: f.title,
+        imageUrl: f.imageUrl,
+        price: f.price,
+        detailHref: `/formations/${f.slug}`,
+        badge: s.formationsLabelSingular,
+        whatsappLink: buildWhatsAppLink(s.whatsappNumber, formationMessage(f, s.formationsLabelSingular)),
+      })),
+      ...services.map((sv) => ({
+        title: sv.title,
+        imageUrl: sv.imageUrl,
+        price: sv.price,
+        detailHref: `/services/${sv.slug}`,
+        badge: s.servicesLabelSingular,
+        whatsappLink: buildWhatsAppLink(s.whatsappNumber, serviceMessage(sv, s.servicesLabelSingular)),
+      })),
+    ];
+
+    // Aperçu de modèle réservé à l'admin connecté : ?preview_template=xxx affiche
+    // ce modèle sans modifier celui réellement appliqué au site.
+    const previewId = req.query.preview_template;
+    const isPreview = Boolean(req.session && req.session.adminId && previewId && isValidTemplateId(previewId));
+    const activeTemplateId = isPreview ? previewId : s.templateId;
+
+    res.render(homeViewFor(activeTemplateId), {
+      title: s.siteName,
+      formations,
+      services,
+      catalogItems,
+      posts,
+      team,
+      testimonials,
+      partners,
+      faqs,
+      isPreview,
+      previewTemplate: isPreview ? getTemplate(previewId) : null,
+    });
   } catch (err) {
     next(err);
   }

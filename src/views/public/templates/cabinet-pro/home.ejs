@@ -1,4 +1,5 @@
-<%- include('../partials/header', { title }) %>
+<%- include('../../../partials/header', { title }) %>
+<%- include('../../../partials/_template-preview-banner') %>
 
 <section class="mkp-banner pt-40px pb-80px">
 	<div class="container">
@@ -32,7 +33,7 @@
 		<p class="text-center fs-13 fw-semibold text-uppercase mb-25px" style="opacity: 0.6;">Ils nous font confiance</p>
 		<div class="partner-strip">
 			<% partners.forEach(partner => { %>
-				<%- include('../partials/_partner-logo', { partner }) %>
+				<%- include('../../../partials/_partner-logo', { partner }) %>
 			<% }) %>
 		</div>
 	</div>
@@ -52,7 +53,7 @@
 			<div class="row">
 				<% formations.forEach(formation => { %>
 					<div class="col-md-6 col-lg-4 mb-30px">
-						<%- include('../partials/_formation-card', { formation }) %>
+						<%- include('../../../partials/_formation-card', { formation }) %>
 					</div>
 				<% }) %>
 			</div>
@@ -71,7 +72,7 @@
 		<div class="row">
 			<% team.forEach(member => { %>
 				<div class="col-6 col-md-3 mb-30px">
-					<%- include('../partials/_team-card', { member }) %>
+					<%- include('../../../partials/_team-card', { member }) %>
 				</div>
 			<% }) %>
 		</div>
@@ -89,7 +90,7 @@
 		<div class="row">
 			<% testimonials.slice(0, 3).forEach(testimonial => { %>
 				<div class="col-md-6 col-lg-4 mb-30px">
-					<%- include('../partials/_testimonial-card', { testimonial }) %>
+					<%- include('../../../partials/_testimonial-card', { testimonial }) %>
 				</div>
 			<% }) %>
 		</div>
@@ -107,7 +108,7 @@
 		<div class="row">
 			<% posts.forEach(post => { %>
 				<div class="col-md-4 mb-30px">
-					<%- include('../partials/_post-card', { post }) %>
+					<%- include('../../../partials/_post-card', { post }) %>
 				</div>
 			<% }) %>
 		</div>
@@ -115,4 +116,4 @@
 </section>
 <% } %>
 
-<%- include('../partials/footer') %>
+<%- include('../../../partials/footer') %>

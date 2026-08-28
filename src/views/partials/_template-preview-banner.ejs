@@ -1,0 +1,12 @@
+<% if (typeof isPreview !== 'undefined' && isPreview) { %>
+	<div class="template-preview-banner">
+		<span>👁️ Aperçu du modèle « <%= previewTemplate.name %> » — pas encore appliqué à votre site.</span>
+		<div class="template-preview-banner__actions">
+			<a href="/admin/templates" class="template-preview-banner__btn template-preview-banner__btn--ghost">Retour</a>
+			<form action="/admin/templates/apply" method="POST">
+				<input type="hidden" name="templateId" value="<%= previewTemplate.id %>">
+				<button type="submit" class="template-preview-banner__btn">Appliquer ce modèle</button>
+			</form>
+		</div>
+	</div>
+<% } %>

@@ -11,6 +11,7 @@ const { uploadTestimonial, uploadSettings, uploadSignatory } = require('../middl
 const { requireAdmin, redirectIfAuthenticated } = require('../middleware/auth');
 const { uniqueSlug } = require('../utils/slugify');
 const { generateReceiptPdf, generateCertificatePdf } = require('../utils/pdf');
+const { TEMPLATES, getTemplate, isValidTemplateId } = require('../templates/registry');
 const { optimizeLogoImage } = require('../utils/image');
 
 const router = express.Router();
@@ -1055,6 +1056,36 @@ router.delete('/attestations/:id', async (req, res, next) => {
     await prisma.certificate.delete({ where: { id: Number(req.params.id) } });
     req.flash('success', 'Attestation supprimée.');
     res.redirect('/admin/attestations');
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ---------- Modèles de site ----------
+
+router.get('/templates', async (req, res, next) => {
+  try {
+    const settings = await prisma.settings.findUnique({ where: { id: 1 } });
+    res.render('admin/templates/list', {
+      title: 'Modèles de site',
+      templates: TEMPLATES,
+      activeTemplateId: settings.templateId,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/templates/apply', async (req, res, next) => {
+  try {
+    const { templateId } = req.body;
+    if (!isValidTemplateId(templateId)) {
+      req.flash('error', 'Modèle inconnu.');
+      return res.redirect('/admin/templates');
+    }
+    await prisma.settings.update({ where: { id: 1 }, data: { templateId } });
+    req.flash('success', `Modèle « ${getTemplate(templateId).name} » appliqué à votre site.`);
+    res.redirect('/admin/templates');
   } catch (err) {
     next(err);
   }

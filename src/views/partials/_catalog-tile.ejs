@@ -1,0 +1,15 @@
+<article class="catalog-tile">
+	<a href="<%= item.detailHref %>" class="catalog-tile__media">
+		<img src="<%= item.imageUrl || '/images/courses/courses-large-01.png' %>" alt="<%= item.title %>">
+		<span class="catalog-tile__badge"><%= item.badge %></span>
+	</a>
+	<div class="catalog-tile__body">
+		<h4 class="catalog-tile__title"><a href="<%= item.detailHref %>" class="transition-all"><%= item.title %></a></h4>
+		<p class="catalog-tile__price"><%= item.price ? item.price.toLocaleString('fr-FR') + ' FCFA' : 'Sur devis' %></p>
+		<% if (item.whatsappLink) { %>
+			<a href="<%= item.whatsappLink %>" target="_blank" rel="noopener" class="catalog-tile__order">
+				<i class="iconify fs-16" data-icon="ic:baseline-whatsapp"></i> Commander sur WhatsApp
+			</a>
+		<% } %>
+	</div>
+</article>

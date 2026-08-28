@@ -1,0 +1,32 @@
+<%- include('../_header', { title }) %>
+
+<p class="hint mb-20px">Le modèle choisi change la mise en page de votre page d'accueil. Votre contenu (formations, services, équipe, WhatsApp, contact...) reste le même quel que soit le modèle actif.</p>
+
+<div class="template-gallery">
+	<% templates.forEach(t => { %>
+		<div class="template-gallery__card <%= t.id === activeTemplateId ? 'is-active' : '' %>">
+			<div class="template-gallery__thumb">
+				<img src="<%= t.thumbnail %>" alt="Aperçu du modèle <%= t.name %>" onerror="this.style.display='none';">
+				<% if (t.id === activeTemplateId) { %>
+					<span class="template-gallery__badge">Actif</span>
+				<% } %>
+			</div>
+			<div class="template-gallery__body">
+				<p class="template-gallery__category"><%= t.category %></p>
+				<h3><%= t.name %></h3>
+				<p class="template-gallery__desc"><%= t.description %></p>
+				<div class="d-flex gap-10px">
+					<a href="/?preview_template=<%= t.id %>" target="_blank" class="admin-btn admin-btn--ghost admin-btn--sm">Prévisualiser</a>
+					<% if (t.id !== activeTemplateId) { %>
+						<form action="/admin/templates/apply" method="POST">
+							<input type="hidden" name="templateId" value="<%= t.id %>">
+							<button type="submit" class="admin-btn admin-btn--sm">Appliquer ce modèle</button>
+						</form>
+					<% } %>
+				</div>
+			</div>
+		</div>
+	<% }) %>
+</div>
+
+<%- include('../_footer') %>

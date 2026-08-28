@@ -1,0 +1,136 @@
+<%- include('../../../partials/header', { title }) %>
+<%- include('../../../partials/_template-preview-banner') %>
+
+<%
+	const devisMessage = settings.defaultWhatsappMessage || "Bonjour, j'aimerais recevoir un devis.";
+	const devisLink = settings.whatsappNumber
+		? `https://wa.me/${settings.whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(devisMessage)}`
+		: null;
+%>
+
+<section class="pt-50px pb-60px" style="background-color: #f5f7fb;">
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-md-7 mb-30px mb-md-0">
+				<h1 class="fw-bolder mb-15px"><%- renderHighlighted(settings.heroTitle) %></h1>
+				<p class="mb-25px"><%= settings.heroSubtitle %></p>
+				<div class="d-flex flex-wrap gap-15px">
+					<% if (devisLink) { %>
+						<a href="<%= devisLink %>" target="_blank" rel="noopener" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all d-inline-flex align-items-center gap-10px">
+							<i class="iconify fs-18" data-icon="mdi:file-document-outline"></i> Demander un devis
+						</a>
+					<% } %>
+					<% if (settings.phoneNumber) { %>
+						<a href="tel:<%= settings.phoneNumber.replace(/[^0-9+]/g, '') %>" class="button button-type-01 fs-14 fw-semibold text-capitalize transition-all d-inline-flex align-items-center gap-10px">
+							<i class="iconify fs-18" data-icon="mdi:phone-outline"></i> Appeler
+						</a>
+					<% } %>
+				</div>
+				<% if (settings.showOnlineBadge) { %>
+					<p class="mt-20px fs-14 fw-semibold" style="color: #1e8a4c;">🟢 En ligne — Réponse rapide</p>
+				<% } %>
+			</div>
+			<div class="col-md-5">
+				<img src="<%= settings.bannerImageUrl || '/images/marketplace/banner.png' %>" alt="<%= settings.siteName %>" style="width: 100%; border-radius: 16px;">
+			</div>
+		</div>
+	</div>
+</section>
+
+<% if (settings.showServices) { %>
+<section class="pt-60px pb-60px">
+	<div class="container">
+		<div class="d-flex align-items-center justify-content-between mb-30px">
+			<h2 class="fs-30 fw-semibold mb-0">Nos <span class="hl-style"><%= settings.servicesLabel.toLowerCase() %></span></h2>
+			<a href="/services" class="fs-14 fw-semibold transition-all">Tout voir &rarr;</a>
+		</div>
+		<% if (services.length === 0) { %>
+			<p>Aucun contenu publié pour le moment dans « <%= settings.servicesLabel %> ».</p>
+		<% } else { %>
+			<div class="row">
+				<% services.forEach(service => { %>
+					<div class="col-md-6 col-lg-4 mb-30px">
+						<%- include('../../../partials/_service-card', { service }) %>
+					</div>
+				<% }) %>
+			</div>
+		<% } %>
+	</div>
+</section>
+<% } %>
+
+<% if (settings.addressCity || settings.googleMapsUrl || settings.openingHours) { %>
+<section class="pt-20px pb-60px" style="background-color: #f5f7fb;">
+	<div class="container">
+		<div class="row align-items-center g-40px">
+			<div class="col-md-6 mb-20px mb-md-0">
+				<h2 class="fs-26 fw-semibold mb-15px">Nous trouver</h2>
+				<% if (settings.addressCity) { %><p class="fs-16 mb-10px"><i class="iconify fs-18 me-5px" data-icon="mdi:map-marker-outline"></i><%= settings.addressCity %></p><% } %>
+				<% if (settings.addressLandmarks) { %><p class="mb-10px" style="opacity: 0.75;"><%= settings.addressLandmarks %></p><% } %>
+				<% if (settings.openingHours) { %><p class="fs-16 mb-0"><i class="iconify fs-18 me-5px" data-icon="mdi:clock-outline"></i><%= settings.openingHours %></p><% } %>
+			</div>
+			<div class="col-md-6">
+				<% if (settings.googleMapsUrl) { %>
+					<iframe src="<%= settings.googleMapsUrl %>" width="100%" height="260" style="border:0; border-radius: 12px;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+				<% } %>
+			</div>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<% if (settings.showTemoignages && testimonials.length > 0) { %>
+<section class="pt-60px pb-60px">
+	<div class="container">
+		<div class="text-center mb-30px">
+			<h2 class="fs-30 fw-semibold mb-0">Ce qu'ils en <span class="hl-style">pensent</span></h2>
+		</div>
+		<div class="row">
+			<% testimonials.slice(0, 3).forEach(testimonial => { %>
+				<div class="col-md-6 col-lg-4 mb-30px">
+					<%- include('../../../partials/_testimonial-card', { testimonial }) %>
+				</div>
+			<% }) %>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<% if (faqs.length > 0) { %>
+<section class="pt-30px pb-80px">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<h2 class="fs-30 fw-semibold mb-30px text-center">Questions <span class="hl-style">fréquentes</span></h2>
+				<div class="faq-accordion">
+					<% faqs.forEach(faq => { %>
+						<div class="faq-item">
+							<button type="button" class="faq-question">
+								<span><%= faq.question %></span>
+								<i class="iconify fs-20 faq-question__icon" data-icon="mdi:chevron-down"></i>
+							</button>
+							<div class="faq-answer">
+								<p class="mb-0"><%= faq.answer %></p>
+							</div>
+						</div>
+					<% }) %>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<script>
+	document.querySelectorAll('.faq-question').forEach(function (btn) {
+		btn.addEventListener('click', function () {
+			var item = btn.closest('.faq-item');
+			var wasOpen = item.classList.contains('is-open');
+			document.querySelectorAll('.faq-item.is-open').forEach(function (openItem) {
+				openItem.classList.remove('is-open');
+			});
+			if (!wasOpen) item.classList.add('is-open');
+		});
+	});
+</script>
+<% } %>
+
+<%- include('../../../partials/footer') %>

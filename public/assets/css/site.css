@@ -606,3 +606,113 @@ html, body {
     min-height: 260px;
   }
 }
+
+/* ===== Aperçu de modèle (admin) ===== */
+.template-preview-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background-color: #1f2430;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 14px;
+  text-align: center;
+}
+.template-preview-banner__actions {
+  display: flex;
+  gap: 10px;
+}
+.template-preview-banner__btn {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: var(--regal-blue);
+  color: #fff;
+  text-decoration: none;
+}
+.template-preview-banner__btn--ghost {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+
+/* ===== Modèle "Boutique & Catalogue" ===== */
+.catalog-hero {
+  background: linear-gradient(180deg, #f5f7fb, #fff);
+}
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 24px;
+}
+.catalog-tile {
+  border: 1px solid #eef0f3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.catalog-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(20, 24, 33, 0.08);
+}
+.catalog-tile__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+}
+.catalog-tile__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.catalog-tile__badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(20, 24, 33, 0.75);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.catalog-tile__body {
+  padding: 16px 18px 18px;
+}
+.catalog-tile__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+.catalog-tile__title a {
+  color: var(--regal-black, #212427);
+}
+.catalog-tile__price {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--regal-blue);
+  margin: 0 0 12px;
+}
+.catalog-tile__order {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background-color: #25d366;
+  color: #fff;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
