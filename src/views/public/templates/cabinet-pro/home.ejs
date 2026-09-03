@@ -13,7 +13,7 @@
 							<a href="/formations" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all">Découvrir nos <%= settings.formationsLabel.toLowerCase() %></a>
 						<% } %>
 						<% if (settings.showServices) { %>
-							<a href="/services" class="button button-type-01 fs-14 fw-semibold text-capitalize transition-all">Nos <%= settings.servicesLabel.toLowerCase() %></a>
+							<a href="/services" class="button button-type-01 fs-14 fw-semibold text-white text-capitalize transition-all">Nos <%= settings.servicesLabel.toLowerCase() %></a>
 						<% } %>
 					</div>
 				</div>
@@ -26,6 +26,50 @@
 		</div>
 	</div>
 </section>
+
+<% if (settings.showManifesto && settings.manifestoTitre) { %>
+<section class="manifesto-section pt-70px pb-70px">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-9 mx-auto">
+				<% if (settings.manifestoSurtitre) { %>
+					<p class="manifesto-surtitre"><%= settings.manifestoSurtitre %></p>
+				<% } %>
+				<h2 class="fs-32 fw-bolder mb-25px"><%= settings.manifestoTitre %></h2>
+				<div class="fs-16">
+					<%- settings.manifestoBody %>
+				</div>
+				<% if (settings.manifestoQuote) { %>
+					<div class="manifesto-quote">
+						<p>&laquo; <%= settings.manifestoQuote %> &raquo;</p>
+						<% if (settings.manifestoQuoteAuthor) { %>
+							<span>&mdash; <%= settings.manifestoQuoteAuthor %></span>
+						<% } %>
+					</div>
+				<% } %>
+			</div>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<% if (settings.showMethodologie && methodologySteps.length > 0) { %>
+<section class="pt-70px pb-70px">
+	<div class="container">
+		<div class="text-center mb-40px">
+			<h2 class="fs-30 fw-semibold mb-10px">Notre <span class="hl-style">méthode</span></h2>
+			<p class="fs-15" style="opacity: 0.7; max-width: 620px; margin: 0 auto;">Trois étapes, un seul objectif : un retour sur investissement mesurable, pas une démonstration technologique.</p>
+		</div>
+		<div class="row">
+			<% methodologySteps.forEach(step => { %>
+				<div class="col-md-4 mb-30px">
+					<%- include('../../../partials/_method-card', { step }) %>
+				</div>
+			<% }) %>
+		</div>
+	</div>
+</section>
+<% } %>
 
 <% if (settings.showPartenaires && partners.length > 0) { %>
 <section class="pt-20px pb-40px">
@@ -58,6 +102,42 @@
 				<% }) %>
 			</div>
 		<% } %>
+	</div>
+</section>
+<% } %>
+
+<% if (settings.showServices && services.length > 0) { %>
+<section class="pt-40px pb-80px" style="background-color: #f5f7fb;">
+	<div class="container">
+		<div class="d-flex align-items-center justify-content-between mb-30px">
+			<h2 class="fs-30 fw-semibold mb-0"><%= settings.servicesLabel %> <span class="hl-style">sur-mesure</span></h2>
+			<a href="/services" class="fs-14 fw-semibold transition-all">Voir nos <%= settings.servicesLabel.toLowerCase() %> &rarr;</a>
+		</div>
+		<div class="row">
+			<% services.forEach(service => { %>
+				<div class="col-md-6 col-lg-4 mb-30px">
+					<%- include('../../../partials/_service-card', { service }) %>
+				</div>
+			<% }) %>
+		</div>
+	</div>
+</section>
+<% } %>
+
+<% if (settings.showEtudesDeCas && caseStudies.length > 0) { %>
+<section class="pt-40px pb-80px">
+	<div class="container">
+		<div class="text-center mb-40px">
+			<h2 class="fs-30 fw-semibold mb-10px">Des résultats, pas des <span class="hl-style">promesses</span></h2>
+			<p class="fs-15" style="opacity: 0.7; max-width: 620px; margin: 0 auto;">Des entreprises qui ont transformé une opération concrète grâce à un agent IA — avec des métriques suivies, pas estimées.</p>
+		</div>
+		<div class="row">
+			<% caseStudies.forEach(caseStudy => { %>
+				<div class="col-md-6 col-lg-4 mb-30px">
+					<%- include('../../../partials/_case-study-card', { caseStudy }) %>
+				</div>
+			<% }) %>
+		</div>
 	</div>
 </section>
 <% } %>
