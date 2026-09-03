@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="col-12 col-lg-4 mb-30px mb-lg-0">
 				<div class="d-block mb-20px"><%- include('./_logo', { variant: 'footer' }) %></div>
-				<p class="mb-20px"><%= settings.siteName %> — Analyse de données, développement informatique et intelligence artificielle.</p>
+				<p class="mb-20px"><%= settings.heroSubtitle ? settings.heroSubtitle.replace(/\{\{|\}\}/g, '') : settings.siteName %></p>
 				<a href="/contact" class="btn button-type-01 fw-semibold d-inline-block border-radius-10px text-capitalize transition-all">Nous contacter</a>
 			</div>
 			<div class="col-6 col-lg-2 mb-20px mb-lg-0">

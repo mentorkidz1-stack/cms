@@ -349,7 +349,7 @@
 			<div class="row justify-between gy-10">
 				<div class="lg:column-4" style="flex: 1 1 280px;">
 					<%- include('../../../partials/_logo', { variant: 'dark' }) %>
-					<p class="text-white/70 mt-5"><%= settings.siteName %> — Analyse de données, développement informatique et intelligence artificielle.</p>
+					<p class="text-white/70 mt-5"><%= settings.heroSubtitle ? settings.heroSubtitle.replace(/\{\{|\}\}/g, '') : settings.siteName %></p>
 				</div>
 				<div class="lg:column-4" style="flex: 1 1 220px;">
 					<h4 class="text-white font-semibold mb-4">Navigation</h4>
